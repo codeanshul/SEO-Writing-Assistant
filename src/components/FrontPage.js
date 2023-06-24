@@ -5,12 +5,18 @@ import allSemanticCheckFunctions from '../utils/SemanticsTagsChecking';
 import checkLinks from '../utils/LinksChecking';
 import checkBodyTextContent from '../utils/TextChecking';
 import videoChecking from '../utils/VideoTranscriptsChecking';
+import Output from './Output';
+
 // import input from './input.html';
 const TextInput = () => {
+
+    // const x = 'Hi';
+    // const y = 'bhaiya';
     const [text, setText] = useState('');
     const [keyword, setKeyword] = useState('lorem,ipsum');
+    const [htmlContent,setHtmlContent] = useState('');
+    const [keyArray,setKeyArray] = useState('');
     const handleInputChangeHTML = (event) => {
-
         setText(event.target.value);
     };
     const handleInputChangeKey = (event) => {
@@ -18,14 +24,14 @@ const TextInput = () => {
     };
     const handleButtonClick = () => {
 
-       fetch('input.html')
-            .then((res) => res.text())
-            .then((res) => {
-                setText(res);
-                processHTML(res);
-            })
-            .catch((err) => console.log(err))
-        // if(text)processHTML(text);
+        //    fetch('input.html')
+        //         .then((res) => res.text())
+        //         .then((res) => {
+        //             setText(res);
+        //             processHTML(res);
+        //         })
+        //         .catch((err) => console.log(err))
+        if(text)processHTML(text);
         function processHTML(contents) {
             // Performing operations on the HTML contents
             const arr = contents.split("</html>");
@@ -33,13 +39,8 @@ const TextInput = () => {
             htmlInput.innerHTML = contents;
             let keyArray = keyword.split(",");
             keyArray.forEach((item) => item.trim());
-            // console.log(keyArray);
-            checkHeaders(htmlInput, keyArray);
-            checkOptimizedImagesWithAlt(htmlInput,keyArray);
-            allSemanticCheckFunctions(htmlInput);
-            checkLinks(htmlInput,keyArray);
-            checkBodyTextContent(htmlInput,keyArray);
-            videoChecking(htmlInput);
+            setHtmlContent(htmlInput);
+            setKeyArray(keyArray);
         }
     };
 
@@ -72,7 +73,6 @@ const TextInput = () => {
                 />
                 {/* <label htmlfor="keywords">Keywords:</label> */}
                 <textarea
-                    // defaultValue = "lorem,ipsum"
                     type="text"
                     id="keywords"
                     value={keyword}
@@ -83,14 +83,14 @@ const TextInput = () => {
                         marginRight: '7px',
                         marginTop: '21px',
                         marginBottom: '23px',
-                        width: '250px',
+                        width: '50%',
                         height: '75px',
                         paddingLeft: '4px',
                         paddingRight: '6px',
                         paddingTop: '10px',
                         paddingBottom: '5px',
-                        border : '1px solid black',
-                        borderRadius : '4px'
+                        border: '1px solid black',
+                        borderRadius: '4px'
                     }}>
 
                 </textarea>
@@ -111,85 +111,17 @@ const TextInput = () => {
                         cursor: 'pointer',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        float: 'right'
+                        float: 'right',
+                        width: '30%',
+                        height: '6%',
                     }}
                 >
                     Get Reccomendations
                 </button>
 
             </div>
-
-            <div id="displaying" style={{ flex: 0.8, margin: 'px', paddingRight: '10px', height: '92vh', width: '50vw', alignItems: 'center', border: '2px solid black', justifyContent: 'center', borderRadius: '7px', textAlign: 'center' }}>
-                <h4> Recommendations </h4>
-                <section id="Headers" style={{
-                    height: '15%',
-                    width: '100%',
-                    overflow: 'scroll',
-                    paddingTop: '10px',
-                    marginLeft: '5px',
-                    marginTop: '18px',
-                    border: '2px solid black',
-                    borderRadius: '5px'
-                }}>
-                </section>
-                <section id="Image" style={{
-                    height: '15%',
-                    width: '100%',
-                    overflow: 'scroll',
-                    paddingTop: '10px',
-                    marginLeft: '5px',
-                    marginTop: '18px',
-                    border: '2px solid black',
-                    borderRadius: '5px'
-                }}>
-                </section>
-                <section id="Semantics" style={{
-                    height: '15%',
-                    width: '100%',
-                    overflow: 'scroll',
-                    paddingTop: '10px',
-                    marginLeft: '5px',
-                    marginTop: '18px',
-                    border: '2px solid black',
-                    borderRadius: '5px'
-                }}>
-                </section>
-                <section id="Links" style={{
-                    height: '15%',
-                    width: '100%',
-                    overflow: 'scroll',
-                    paddingTop: '10px',
-                    marginLeft: '5px',
-                    marginTop: '18px',
-                    border: '2px solid black',
-                    borderRadius: '5px'
-                }}>
-                </section>
-                <section id="Text" style={{
-                    height: '15%',
-                    width: '100%',
-                    overflow: 'scroll',
-                    paddingTop: '10px',
-                    marginLeft: '5px',
-                    marginTop: '18px',
-                    border: '2px solid black',
-                    borderRadius: '5px'
-                }}>
-                
-                </section>
-                <section id="Video" style={{
-                    height: '9%',
-                    width: '100%',
-                    overflow: 'scroll',
-                    paddingTop: '10px',
-                    marginLeft: '5px',
-                    marginTop: '18px',
-                    border: '2px solid black',
-                    borderRadius: '5px'
-                }}>
-                
-                </section>
-            </div>
+            <Output htmlInput={htmlContent} keyArray={keyArray} readText = {text}>
+            </Output>
         </div>
     );
 };

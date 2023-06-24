@@ -1,0 +1,30 @@
+.accordion {
+    border: 1px solid #ddd;
+  }
+  
+  .accordion-header {
+    background-color: #f5f5f5;
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+  }
+  .accordion-content {
+    padding: 10px;
+    display: block;
+  }
+  
+  .accordion-content.show {
+    display: block;
+  }
+  .accordian-title {
+    flex-grow: 1;
+  }
+  .accordian-arrow {
+    margin-right: 0.5rem;
+    transform: rotate(0);
+    transition: transform 0.3s;
+  }
+  .accordion.collapsed .accordian-arrow {
+    transform: rotate(-90deg);
+  }
+  

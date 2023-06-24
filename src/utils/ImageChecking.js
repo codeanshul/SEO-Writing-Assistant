@@ -1,50 +1,71 @@
 import imageCompression from "browser-image-compression";
-export default function checkOptimizedImagesWithAlt(htmlInput, inputNum) {
+export default function checkOptimizedImagesWithAlt(htmlInput) {
 
+    let objReturn = {
+        title: `<h3> Image checking </h3>`,
+        content: "No Content Given"
+    }
+    if (htmlInput === '') return objReturn;
+    let outputString = '';
     const images = htmlInput.querySelectorAll('img');
     // console.log(images);
     if (images.length == 0) {
-        giveSuggestion(`<p>No images in the article . Please add some relevant image so that results can become much more useful </p> `);
-        return;
+        outputString = giveSuggestion(`<p>No images in the article . Please add some relevant image so that results can become much more useful </p> `, outputString);
+        objReturn.content = outputString;
+        return objReturn;
     }
+    let itemProcessed = 0;
+    // console.log(images.length);
     for (let img of images) {
         const altText = img.getAttribute('alt');
         const src = img.getAttribute('src');
         checkImageSrc(src)
             .then((isImageValid) => {
-                if (!isImageValid) return;
-                checkValidImage(img,src, altText);
+                itemProcessed++;
+                if(isImageValid)outputString = checkImage(img, src, altText, outputString);
+                else console.log(`Not able to process this image ${src}`);
+                // console.log(itemProcessed);
+                if (itemProcessed == images.length) {
+                    console.log(itemProcessed);
+                    objReturn.content = outputString;
+                    return objReturn;
+                }
             })
             .catch((error) => {
-                return;
+                itemProcessed++;
+                // console.log(`Not able to process this image ${src}`);
             });
     }
+    return objReturn;
 }
-function checkValidImage(img,src, altText) {
-    giveSuggestion(`<h3>Image check for the image </u>   <a href = ${src}> Img </h3> `);
+function checkImage(img, src, altText, outputString) {
+
+    // let allErrorCheck = '';
+    outputString = giveSuggestion(`<h4>Image check for the image </u>   <a href = ${src}> Img </a> </h4> `, outputString);
     let anyError = false;
     if (!altText) {
-        giveSuggestion(`<p>Image without alt attribute:</p> `);
+        outputString = giveSuggestion(`<li>Image without alt attribute:</li> `, outputString);
         anyError = true;
     }
     if (!getImageFormatFromURL(src)) {
-        giveSuggestion(`<p>Please prefer taking recommended image format jpeg , png , webp </p> `);
+        outputString = giveSuggestion(`<li>Please prefer taking recommended image format jpeg , png , webp </li> `, outputString);
         anyError = true;
     }
     if (checkImageCompression(src)) {
-        giveSuggestion(`<p> Image can be further compressed. </p> `);
+        outputString = giveSuggestion(`<li> Image can be further compressed. </li> `, outputString);
         anyError = true;
     }
     if (hasCrypticCode(src)) {
-        giveSuggestion(`<p>Please make the src link of the image a little descriptive</p> `);
+        outputString = giveSuggestion(`<li>Please make the src link of the image a little descriptive</li> `, outputString);
         anyError = true;
     }
     if (!isLazyLoadEnable(img)) {
-        giveSuggestion(`<p> Please make the loading attribute of this image as lazy for better loading time of the page`);
+        outputString = giveSuggestion(`<li> Please make the loading attribute of this image as lazy for better loading time of the page </li>`, outputString);
     }
     if (!anyError) {
-        giveSuggestion(`<p>Image has all required attributes for a good SEO recommended page</p> `);
+        outputString = giveSuggestion(`<li>Image has all required attributes for a good SEO recommended page</li> `, outputString);
     }
+    return outputString;
 }
 function checkImageSrc(imageUrl) {
     return new Promise((resolve) => {
@@ -60,8 +81,6 @@ function checkImageSrc(imageUrl) {
         image.src = imageUrl;
     });
 };
-
-// Usage example
 function isLazyLoadEnable(img) {
     let attributeValue = img.getAttribute('loading');
     if (attributeValue === null) return false;
@@ -114,9 +133,10 @@ function getImageFormatFromURL(url) {
     }
     return true;
 }
-function giveSuggestion(text) {
-    let ImageSection = document.getElementById(`Image`);
-    ImageSection.insertAdjacentHTML('beforeend', text);
+function giveSuggestion(text, outputString) {
+
+    outputString = `${outputString}${text}`;
+    return outputString;
 }
 // alt text check - done
 // check for number of images -> Done

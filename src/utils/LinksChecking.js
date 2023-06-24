@@ -1,48 +1,48 @@
 export default function checkLinks(htmlInput,keyArray)
 {
-    // var port = window.location.port;
-    // var hostname = window.location.hostname;
+    // console.log(keyArray);
+    let objReturn = {
+        title: ` <h3> Links Checking</h3>`,
+        content: "No content given"
+    }
+    let outputString = '';
+    if(htmlInput === '' || keyArray === null)return objReturn;
     var allLinks = htmlInput.getElementsByTagName('a');
-   
     var internalLinks = [];
     var externalLinks = [];
     for(let link of allLinks)
     {
         var URL_format = new URL(link.href);
         var url = link.getAttribute('href');
-        // console.log(url);
-        // console.log();
-        if(URL_format.hostname.endsWith('sprinklr.com') || url.startsWith('/'))
-        {
+        if(URL_format.hostname.endsWith('sprinklr.com') || url.startsWith('/')){
             internalLinks.push(link);
         }
         else externalLinks.push(link);
         // console.log(newURL.hostname);
     }
-    externalLinksCheck(externalLinks,keyArray);
-    internalLinksCheck(internalLinks,keyArray);
-
+    outputString = externalLinksCheck(externalLinks,keyArray,outputString);
+    outputString = internalLinksCheck(internalLinks,keyArray,outputString);
+    objReturn.content = outputString;
+    return objReturn;
 }
-function externalLinksCheck(externalLinks,keyArray) {
+function externalLinksCheck(externalLinks,keyArray,outputString){
     if(externalLinks.length == 0)
     {
-        giveSuggestion(`<h4> If possible,please add some relevant external links to your content</h4>`);
-        return ;
+        outputString = giveSuggestion(`<h4> If possible,please add some relevant external links to your content</h4>`,outputString);
+        return outputString;
     }
     let anyKeyword = false;// check if their exixts atleast one keyword in all the links
-    let allEmptyTextLink = true;
     for(let link of externalLinks)
     {
-        giveSuggestion(`<p> <u> Check for the external link </u> <a href = ${link.href}> ${link.text} </a> </p> `);
+        outputString = giveSuggestion(`<h4> Check for the external link <a href = ${link.href}> ${link.text} </a> </h4> `,outputString);
         let anyError = false;
         if(link.text.trim() == "") // if no anchor text
         {
-            giveSuggestion(`<li>Add anchor text to your link</li>`);
+            outputString = giveSuggestion(`<li>Add anchor text to your link</li>`,outputString);
             anyError = true;
         }
         else // check for keywords inside link
         {
-            allEmptyTextLink = false;
             let anchorText = link.text.trim();
             let anchorSplit = anchorText.split(' ');
             for(let word of anchorSplit)
@@ -50,45 +50,39 @@ function externalLinksCheck(externalLinks,keyArray) {
                 if(keyArray.includes(word))anyKeyword = true;
             }
         }
-        if(link.rel == "nofollow"){}
-        else
-        {
-            giveSuggestion(`<li> Add a rel attribute as nofollow in the link </li>`);
+        if(link.rel !== 'nofollow'){
+            anyError = true;
+            outputString = giveSuggestion(`<li> Add a rel attribute as nofollow in the link </li>`,outputString);
         }
-        // if(!anyError)
-        // {
-        //     textContent = `<p>No error with this link</p>`;
-        //     Links.insertAdjacentHTML('beforeend',textContent);
-        // }
+        if(!anyError){
+            outputString = giveSuggestion(`<li>All okay with this link</li>`,outputString);
+        }
     }
-    if(!allEmptyTextLink)
-    {
-        giveSuggestion(`<h4>No keyword in all the external links of the content</h4>`);
+    if(!anyKeyword){
+        outputString = giveSuggestion(`<h4>No keyword in all the external links of the content</h4>`,outputString);
     }
-
+    return outputString;
 }
-function internalLinksCheck(internalLinks,keyArray)
+function internalLinksCheck(internalLinks,keyArray,outputString)
 {
-    if(internalLinks.length == 0)
-    {
-        giveSuggestion(`<h4> If possible,please add some relevant internal links to your content</h4>`);
-        return;
+    if(internalLinks.length == 0){
+        // outputString = giveSuggestion(`<h4> If possible,please add some relevant internal links to your content</h4>`,outputString);
+        return outputString;
     }
     let anyKeyword = false;
     let allEmptyTextLink = true;
     for(let link of internalLinks)
     {
-        // let textContent = `<p> <u> Check for the internal link </u> <a href = ${link.href}> ${link.text} </a> </p> `;
-        // Links.insertAdjacentHTML('beforeend',textContent);
+        outputString = giveSuggestion(`<p> <u> Check for the internal link </u> <a href = ${link.href}> ${link.text} </a> </p>`,outputString);
+        // wont work if the link is starting with /
         let anyError = false;
         if(link.text.trim() == "") // if no anchor text
         {
-            giveSuggestion(`<li>Add anchor text to your link</li>`);
+            outputString = giveSuggestion(`<li>Add anchor text to your link</li>`,outputString);
             anyError = true;
         }
         else // check for keywords inside link
         {
-            allEmptyTextLink = false;
             let anchorText = link.text.trim();
             let anchorSplit = anchorText.split(' ');
             for(let word of anchorSplit)
@@ -98,13 +92,13 @@ function internalLinksCheck(internalLinks,keyArray)
         }
     }
     if(!allEmptyTextLink){
-        giveSuggestion(`<h4>No keyword in all the internal links of the content</h4>`);
+        outputString = giveSuggestion(`<h4>No keyword in all the internal links of the content</h4>`,outputString);
     }
+    return outputString;
 }
-function giveSuggestion(textContent ) {
-    let Links = document.getElementById(`Links`); 
-    // console.log(semanticOutput);
-    Links.insertAdjacentHTML('beforeend', textContent);
+function giveSuggestion(text,outputString) {
+    outputString = `${outputString}${text}`;
+    return outputString;
 }
 
 
