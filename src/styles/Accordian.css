@@ -1,5 +1,11 @@
 .accordion {
     border: 1px solid #ddd;
+    box-shadow: 4px 4px 6px rgba(68, 68, 68, 0.2);
+    margin-top: 8px;
+    margin-right: 6px;
+    margin-left: 9px;
+    border-radius: 15px;
+
   }
   
   .accordion-header {
@@ -27,4 +33,5 @@
   .accordion.collapsed .accordian-arrow {
     transform: rotate(-90deg);
   }
+
   

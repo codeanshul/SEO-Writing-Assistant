@@ -1,0 +1,15 @@
+.keyword {
+    margin-left: 12px;
+    margin-right: 12px;
+    margin-top: 14px;
+    margin-bottom: 12px;
+    width: 50%;
+    height: 75px;
+    padding-left: 4px;
+    padding-right: 6px;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    border: 1px solid black;
+    border-radius: 4px;
+    box-shadow: 5px 5px 7px rgba(68, 68, 68, 0.2);
+}

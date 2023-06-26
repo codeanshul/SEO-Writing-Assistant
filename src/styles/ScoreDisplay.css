@@ -1,5 +1,6 @@
 .score-display {
     text-align: center;
+    
   }
   
   .score-circle {
@@ -11,6 +12,8 @@
     justify-content: center;
     align-items: center;
     margin: 8px auto;
+    box-shadow: 4px 4px 6px rgba(68, 68, 68, 0.2);
+    margin: '10px';
   }
   
   .score {

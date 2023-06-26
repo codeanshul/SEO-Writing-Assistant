@@ -2,7 +2,7 @@ import imageCompression from "browser-image-compression";
 export default function checkOptimizedImagesWithAlt(htmlInput) {
 
     let objReturn = {
-        title: `<h3> Image checking </h3>`,
+        title: 'Image Checking',
         content: "No Content Given"
     }
     if (htmlInput === '') return objReturn;
@@ -10,7 +10,7 @@ export default function checkOptimizedImagesWithAlt(htmlInput) {
     const images = htmlInput.querySelectorAll('img');
     // console.log(images);
     if (images.length == 0) {
-        outputString = giveSuggestion(`<p>No images in the article . Please add some relevant image so that results can become much more useful </p> `, outputString);
+        outputString = giveSuggestion(`No images in the article , Please add some relevant image so that results can become much more useful%`, outputString);// yellow
         objReturn.content = outputString;
         return objReturn;
     }
@@ -24,7 +24,6 @@ export default function checkOptimizedImagesWithAlt(htmlInput) {
                 itemProcessed++;
                 if(isImageValid)outputString = checkImage(img, src, altText, outputString);
                 else console.log(`Not able to process this image ${src}`);
-                // console.log(itemProcessed);
                 if (itemProcessed == images.length) {
                     console.log(itemProcessed);
                     objReturn.content = outputString;
@@ -41,29 +40,29 @@ export default function checkOptimizedImagesWithAlt(htmlInput) {
 function checkImage(img, src, altText, outputString) {
 
     // let allErrorCheck = '';
-    outputString = giveSuggestion(`<h4>Image check for the image </u>   <a href = ${src}> Img </a> </h4> `, outputString);
+    outputString = giveSuggestion(`Image check for the image%${src}IMG%`, outputString);// transparent
     let anyError = false;
     if (!altText) {
-        outputString = giveSuggestion(`<li>Image without alt attribute:</li> `, outputString);
+        outputString = giveSuggestion(`Image without alt attribute%`, outputString);// yellow
         anyError = true;
     }
     if (!getImageFormatFromURL(src)) {
-        outputString = giveSuggestion(`<li>Please prefer taking recommended image format jpeg , png , webp </li> `, outputString);
+        outputString = giveSuggestion(`Please prefer taking recommended image format jpeg , png , webp%`, outputString);// yellow
         anyError = true;
     }
     if (checkImageCompression(src)) {
-        outputString = giveSuggestion(`<li> Image can be further compressed. </li> `, outputString);
+        outputString = giveSuggestion('Image can be further compressed%', outputString);// yellow
         anyError = true;
     }
     if (hasCrypticCode(src)) {
-        outputString = giveSuggestion(`<li>Please make the src link of the image a little descriptive</li> `, outputString);
+        outputString = giveSuggestion('Please make the src link of the image a little descriptive%', outputString);// yellow
         anyError = true;
     }
     if (!isLazyLoadEnable(img)) {
-        outputString = giveSuggestion(`<li> Please make the loading attribute of this image as lazy for better loading time of the page </li>`, outputString);
+        outputString = giveSuggestion(`'Please make the loading attribute of this image as lazy for better loading time of the page%`, outputString);// yellow
     }
     if (!anyError) {
-        outputString = giveSuggestion(`<li>Image has all required attributes for a good SEO recommended page</li> `, outputString);
+        outputString = giveSuggestion(`Image has all required attributes for a good SEO recommended page%`, outputString);// green
     }
     return outputString;
 }

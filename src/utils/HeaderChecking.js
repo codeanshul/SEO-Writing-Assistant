@@ -2,7 +2,7 @@
 export default function checkHeaders(htmlInput, keyArray) {
 
     let objReturn = {
-        title: ` <h3> Header Checking</h3>`,
+        title: 'Header Checking',
         content: "No content given"
     }
     if (htmlInput === '' || keyArray === null) return objReturn;
@@ -12,13 +12,13 @@ export default function checkHeaders(htmlInput, keyArray) {
     headerTags = tempObj.headerTags// will remove all the header tags which do not have any content in it
     outputString = tempObj.outputString;
     if (headerTags.length === 0) {
-        outputString = giveSuggestion(`<h4> <li> No header tags </li> </h4>`,outputString);
+        outputString = giveSuggestion(`No header tags.`,outputString);// red
         objReturn.content = outputString;
         return objReturn;
     }
     // check for the first header tag in the content , if it is h1 then , else report
     if (headerTags[0].tagName != "H1") {
-        outputString = giveSuggestion(`<h4> <li> Your content's first heading should be h1 tag only </li> </h4>`,outputString);
+        outputString = giveSuggestion(`Your content's first heading should be h1 tag only.`,outputString);// red
     }
     // check for number of h1 heading in the content , if it is more than 1 report
     outputString = countH1Tags(headerTags,outputString);
@@ -40,7 +40,7 @@ function filtertags(headerTags,outputString) {
     for (let i = 0; i < headerTags.length; i++) {
         let tag = headerTags[i].tagName;
         if (hasOnlyWhitespaceContent(headerTags[i].childNodes[0])) {
-            outputString = giveSuggestion(`<h4> You have a ${tag}tag which has no content in it </h4>`,outputString);
+            outputString = giveSuggestion(`You have a ${tag}tag which has no content in it .`,outputString);// yellow
         }
         else {
             contenttags.push(headerTags[i]);
@@ -58,17 +58,17 @@ function countH1Tags(headerTags,outputString) {
         }
     }
     if (cnth1 > 1) {
-        outputString = giveSuggestion(`<h4> There should be only 1 h1 tag in the page . You have ${cnth1} </h4>`,outputString);
+        outputString = giveSuggestion(`There should be only 1 h1 tag in the page . You have ${cnth1}.`,outputString);// yellow
     }
     return outputString;
 }
 function checkForKeywordsHeading(firstHeaderTag, keyArray,outputString) {
     let Heading = firstHeaderTag.childNodes[0].textContent.trim();
     if (Heading.length > 60) {
-        outputString = giveSuggestion(`<h4> Please try to reduce the length of your heading </h4> `,outputString);
+        outputString = giveSuggestion(`Please try to reduce the length of your heading.`,outputString);// yellow
     }
     else if (Heading.length < 5) {
-        outputString = giveSuggestion(`<h4> Please try to enlarge the length of your heading </h4> `,outputString);
+        outputString = giveSuggestion(`Please try to enlarge the length of your heading.`,outputString);// yellow
     }
     // checking for count of keywords in the array 
     let headingArray = Heading.replace(/\s+/g, ' ').trim().toLowerCase().split(' ');
@@ -77,7 +77,7 @@ function checkForKeywordsHeading(firstHeaderTag, keyArray,outputString) {
         if (headingArray.includes(element)) anyKeywordHeading = true;
     });
     if (!anyKeywordHeading) {
-        outputString = giveSuggestion(`<h4>No keywords in the heading . Please try to add some</h4>`,outputString);
+        outputString = giveSuggestion(`No keywords in the heading , Please try to add some.`,outputString);// yellow
     }
     // console.log(outputString);
     return outputString;
@@ -96,14 +96,14 @@ function checkForHeirarchy(headerTags,outputString) {
         for (let j = 1; j < level; j++) {
             if (countHeader[j] == 0) {
                 // console.log('anshul');
-                allLevelCheck = `${allLevelCheck}<li> There should be atleast one h${j} tag above this tag</li>`;
+                allLevelCheck = `${allLevelCheck}There should be atleast one h${j} tag above this tag.`;
                 anyError = true;
             }
         }
         if (anyError) {
-            outputString = giveSuggestion(`<h4> ${currTag.childNodes[0].textContent.trim()} </h4> `,outputString);
+            outputString = giveSuggestion(`${currTag.childNodes[0].textContent.trim()}.`,outputString);// transparent
             // console.log(allLevelCheck);
-            outputString = giveSuggestion(allLevelCheck,outputString);
+            outputString = giveSuggestion(allLevelCheck,outputString);// yellow
             // outputString = giveSuggestion(`<li> No heirarchy problems with this heading </li>`,outputString);
         }
     }
