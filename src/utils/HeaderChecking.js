@@ -1,9 +1,11 @@
 // let str ;
+import getInnerText from "./GetInnerText";
 export default function checkHeaders(htmlInput, keyArray) {
 
     let objReturn = {
         title: 'Header Checking',
-        content: "No content given"
+        content: "No content given",
+        score : 20,
     }
     if (htmlInput === '' || keyArray === null) return objReturn;
     let outputString = '';
@@ -18,7 +20,7 @@ export default function checkHeaders(htmlInput, keyArray) {
     }
     // check for the first header tag in the content , if it is h1 then , else report
     if (headerTags[0].tagName != "H1") {
-        outputString = giveSuggestion(`Your content's first heading should be h1 tag only.`,outputString);// red
+        outputString = giveSuggestion(`Your content's first heading should be h1 tag only , You have ${headerTags[0].tagName}.`,outputString);// red
     }
     // check for number of h1 heading in the content , if it is more than 1 report
     outputString = countH1Tags(headerTags,outputString);
@@ -39,9 +41,11 @@ function filtertags(headerTags,outputString) {
     let contenttags = [];
     for (let i = 0; i < headerTags.length; i++) {
         let tag = headerTags[i].tagName;
-        if (hasOnlyWhitespaceContent(headerTags[i].childNodes[0])) {
-            outputString = giveSuggestion(`You have a ${tag}tag which has no content in it .`,outputString);// yellow
-        }
+        
+        let headerText = getInnerText(headerTags[i].innerHTML).replace(/\s+/g, ' ').trim();
+        // console.log(headerText);
+        // getting a error in a page source.
+        if(headerText.length == 0 || headerText.length == 1)outputString = giveSuggestion(`You have a ${tag}tag which has no content in it .`,outputString);
         else {
             contenttags.push(headerTags[i]);
         }
@@ -58,7 +62,7 @@ function countH1Tags(headerTags,outputString) {
         }
     }
     if (cnth1 > 1) {
-        outputString = giveSuggestion(`There should be only 1 h1 tag in the page . You have ${cnth1}.`,outputString);// yellow
+        outputString = giveSuggestion(`There should be only 1 h1 tag in the page,You have ${cnth1}.`,outputString);// yellow
     }
     return outputString;
 }
@@ -101,7 +105,8 @@ function checkForHeirarchy(headerTags,outputString) {
             }
         }
         if (anyError) {
-            outputString = giveSuggestion(`${currTag.childNodes[0].textContent.trim()}.`,outputString);// transparent
+            let headerText = getInnerText(headerTags[i].innerHTML).replace(/\s+/g, ' ').trim();
+            outputString = giveSuggestion(`${headerText}.`,outputString);// transparent
             // console.log(allLevelCheck);
             outputString = giveSuggestion(allLevelCheck,outputString);// yellow
             // outputString = giveSuggestion(`<li> No heirarchy problems with this heading </li>`,outputString);

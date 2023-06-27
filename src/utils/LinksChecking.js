@@ -2,8 +2,9 @@ export default function checkLinks(htmlInput,keyArray)
 {
     // console.log(keyArray);
     let objReturn = {
-        title: ` <h3> Links Checking</h3>`,
-        content: "No content given"
+        title: `Links Checking`,
+        content: "No content given",
+        score : 10,
     }
     let outputString = '';
     if(htmlInput === '' || keyArray === null)return objReturn;
@@ -28,17 +29,17 @@ export default function checkLinks(htmlInput,keyArray)
 function externalLinksCheck(externalLinks,keyArray,outputString){
     if(externalLinks.length == 0)
     {
-        outputString = giveSuggestion(`<h4> If possible,please add some relevant external links to your content</h4>`,outputString);
+        outputString = giveSuggestion(`If possible,please add some relevant external links to your content,page will get more coverage%`,outputString);// yellow h4
         return outputString;
     }
     let anyKeyword = false;// check if their exixts atleast one keyword in all the links
     for(let link of externalLinks)
     {
-        outputString = giveSuggestion(`<h4> Check for the external link <a href = ${link.href}> ${link.text} </a> </h4> `,outputString);
+        outputString = giveSuggestion(`Check for the external link%${link.href}randommm${link.text}%`,outputString);// tranparent h4
         let anyError = false;
         if(link.text.trim() == "") // if no anchor text
         {
-            outputString = giveSuggestion(`<li>Add anchor text to your link</li>`,outputString);
+            outputString = giveSuggestion(`Add anchor text to your link%`,outputString);// red li
             anyError = true;
         }
         else // check for keywords inside link
@@ -47,19 +48,20 @@ function externalLinksCheck(externalLinks,keyArray,outputString){
             let anchorSplit = anchorText.split(' ');
             for(let word of anchorSplit)
             {
+                // if(!word)continue;
                 if(keyArray.includes(word))anyKeyword = true;
             }
         }
         if(link.rel !== 'nofollow'){
             anyError = true;
-            outputString = giveSuggestion(`<li> Add a rel attribute as nofollow in the link </li>`,outputString);
+            outputString = giveSuggestion(`Add a rel attribute as nofollow in the link%`,outputString);// yellow li
         }
         if(!anyError){
-            outputString = giveSuggestion(`<li>All okay with this link</li>`,outputString);
+            outputString = giveSuggestion(`All okay with this link%`,outputString);// green li
         }
     }
     if(!anyKeyword){
-        outputString = giveSuggestion(`<h4>No keyword in all the external links of the content</h4>`,outputString);
+        outputString = giveSuggestion(`No keyword in all the external links of the content%`,outputString);// yellow h4
     }
     return outputString;
 }
@@ -73,12 +75,12 @@ function internalLinksCheck(internalLinks,keyArray,outputString)
     let allEmptyTextLink = true;
     for(let link of internalLinks)
     {
-        outputString = giveSuggestion(`<p> <u> Check for the internal link </u> <a href = ${link.href}> ${link.text} </a> </p>`,outputString);
+        outputString = giveSuggestion(`Check for the internal link%${link.href}randommm${link.text}%`,outputString);// transparent h4
         // wont work if the link is starting with /
         let anyError = false;
         if(link.text.trim() == "") // if no anchor text
         {
-            outputString = giveSuggestion(`<li>Add anchor text to your link</li>`,outputString);
+            outputString = giveSuggestion(`Add anchor text to your link%`,outputString);// red li
             anyError = true;
         }
         else // check for keywords inside link
@@ -92,7 +94,7 @@ function internalLinksCheck(internalLinks,keyArray,outputString)
         }
     }
     if(!allEmptyTextLink){
-        outputString = giveSuggestion(`<h4>No keyword in all the internal links of the content</h4>`,outputString);
+        outputString = giveSuggestion(`No keyword in all the internal links of the content%`,outputString);// yellow li
     }
     return outputString;
 }

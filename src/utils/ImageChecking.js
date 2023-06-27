@@ -3,7 +3,8 @@ export default function checkOptimizedImagesWithAlt(htmlInput) {
 
     let objReturn = {
         title: 'Image Checking',
-        content: "No Content Given"
+        content: "No Content Given",
+        score : 20,
     }
     if (htmlInput === '') return objReturn;
     let outputString = '';
@@ -25,7 +26,7 @@ export default function checkOptimizedImagesWithAlt(htmlInput) {
                 if(isImageValid)outputString = checkImage(img, src, altText, outputString);
                 else console.log(`Not able to process this image ${src}`);
                 if (itemProcessed == images.length) {
-                    console.log(itemProcessed);
+                    // console.log(itemProcessed);
                     objReturn.content = outputString;
                     return objReturn;
                 }
@@ -40,7 +41,7 @@ export default function checkOptimizedImagesWithAlt(htmlInput) {
 function checkImage(img, src, altText, outputString) {
 
     // let allErrorCheck = '';
-    outputString = giveSuggestion(`Image check for the image%${src}IMG%`, outputString);// transparent
+    outputString = giveSuggestion(`Image check for the image ${src}IMG%`, outputString);// transparent
     let anyError = false;
     if (!altText) {
         outputString = giveSuggestion(`Image without alt attribute%`, outputString);// yellow
@@ -59,7 +60,7 @@ function checkImage(img, src, altText, outputString) {
         anyError = true;
     }
     if (!isLazyLoadEnable(img)) {
-        outputString = giveSuggestion(`'Please make the loading attribute of this image as lazy for better loading time of the page%`, outputString);// yellow
+        outputString = giveSuggestion(`Please make the loading attribute of this image as lazy for better loading time of the page%`, outputString);// yellow
     }
     if (!anyError) {
         outputString = giveSuggestion(`Image has all required attributes for a good SEO recommended page%`, outputString);// green
@@ -103,10 +104,10 @@ async function checkImageCompression(imageUrl) {
                 console.log(file.size);
                 const isCompressed = compressedFile.size < file.size;
                 if (isCompressed) {
-                    console.log('Image can be further compressed.');
+                    // console.log('Image can be further compressed.');
                     return true;
                 } else {
-                    console.log('Image is already optimally compressed.');
+                    // console.log('Image is already optimally compressed.');
                     return false;
                 }
             })

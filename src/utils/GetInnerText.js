@@ -3,7 +3,6 @@ export default function getInnerText(readText) {
     // Create a temporary container element
     const tempContainer = document.createElement('div');
     tempContainer.innerHTML = readText;
-    console.log(tempContainer);
     // Remove unwanted elements or properties
     const elementsToRemove = ['style', 'script', 'link', 'meta'];
     elementsToRemove.forEach((tagName) => {

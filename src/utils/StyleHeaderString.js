@@ -1,4 +1,3 @@
-
 export default function styleHeaderString(headerData) {
     const parts = headerData.split(".");
     let outputArray = [];

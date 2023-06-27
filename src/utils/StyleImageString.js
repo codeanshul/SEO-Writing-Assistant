@@ -10,17 +10,20 @@ export default function styleImageString(imageData)
             bgColor = 'yellow';
         }
         else if (str.includes('Image check for the image')) {
-            ele = 'h4';
+
+            ele = 'a';
             bgColor = 'transparent';
+            outputArray.push({tagType : 'img',element: ele, backgroundColor: bgColor, key: index, text: str ,anchorText : 'IMG',link : str.slice(26,str.length - 3)});
+            return;
         }
         else if (str.includes("IMG")) {
             // console.log(str);
             ele = 'a';
             bgColor = 'transparent';
-            outputArray.push({ element: ele, backgroundColor: bgColor, key: index, text: str ,anchorText : 'IMG'});
+            outputArray.push({ element: ele, backgroundColor: bgColor, key: index, text: str ,anchorText : 'IMG',link : str.slice(0,str.length - 3)});
             return;
         }
-        else if (str.includes("Image without alt attribute:")) {
+        else if (str.includes("Image without alt attribute")) {
             ele = 'li';
             bgColor = 'yellow';
         }

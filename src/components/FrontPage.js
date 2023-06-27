@@ -17,14 +17,14 @@ const TextInput = () => {
     };
     const handleButtonClick = () => {
 
-           fetch('input.html')
-                .then((res) => res.text())
-                .then((res) => {
-                    setText(res);
-                    processHTML(res);
-                })
-                .catch((err) => console.log(err))
-        // if(text)processHTML(text);
+        //    fetch('input.html')
+        //         .then((res) => res.text())
+        //         .then((res) => {
+        //             setText(res);
+        //             processHTML(res);
+        //         })
+        //         .catch((err) => console.log(err))
+        if(text)processHTML(text);
         function processHTML(contents) {
             // Performing operations on the HTML contents
             const arr = contents.split("</html>");
@@ -46,7 +46,7 @@ const TextInput = () => {
                     type="text"
                     value={text}
                     onChange={handleInputChangeHTML}
-                    spellcheck = 'false'
+                    spellCheck = 'false'
                 />
                 <textarea
                     className='keyword'

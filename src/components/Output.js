@@ -10,14 +10,14 @@ import checkSemanticTags from '../utils/SemanticsTagsChecking'
 import checkBodyTextContent from '../utils/TextChecking'
 
 const Output = ({htmlInput,keyArray,readText}) => {
-    console.log(htmlInput);
     // if(htmlInput == 'No HTML content given' || keyArray == 'No keywords given')return;
     const headerData = checkHeaders(htmlInput, keyArray);
     const imageData = checkOptimizedImagesWithAlt(htmlInput);
-    // const semanticData = checkSemanticTags(htmlInput);
-    // const linksData = checkLinks(htmlInput,keyArray);
-    // const textcheckData = checkBodyTextContent(htmlInput,keyArray,readText);
-    console.log(htmlInput);
+    const semanticData = checkSemanticTags(htmlInput);
+    const linkData = checkLinks(htmlInput,keyArray);
+    const textcheckData = checkBodyTextContent(htmlInput,keyArray,readText);
+    const totalScore = headerData.score + imageData.score + semanticData.score + linkData.score + textcheckData.score;
+    // console.log(htmlInput);
     return ( 
         <div className = 'rightside'id="displaying">
             <h2 className = 'getrecommendation'><u>Get Recommendations</u></h2>
@@ -25,12 +25,12 @@ const Output = ({htmlInput,keyArray,readText}) => {
 
             </div>
             <div className="Sections">
-                <ScoreDisplay> </ScoreDisplay>
+                <ScoreDisplay score = {totalScore}> </ScoreDisplay>
                 <Accordion data={headerData} />
                 <Accordion data={imageData} />
-                {/* <Accordion data={semanticData} />
-                <Accordion data={linksData} />
-                <Accordion data={textcheckData} /> */}
+                <Accordion data={semanticData} />
+                <Accordion data={linkData} />
+                <Accordion data={textcheckData} />
             </div>
         </div>
     )

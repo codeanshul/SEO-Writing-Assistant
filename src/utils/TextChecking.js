@@ -5,8 +5,9 @@ import getInnerText from "./GetInnerText";
 export default function checkBodyTextContent(htmlInput, keyArray, readText) {
     // const textAnalysis = document.getElementById(`Text`);
     let objReturn = {
-        title: '<h3>Text Checking</h3>',
-        content: 'No content given'
+        title: 'Text Checking',
+        content: 'No content given',
+        score: 0,
     }
     if (htmlInput === '') return objReturn;
     else if (keyArray === null) {
@@ -16,6 +17,7 @@ export default function checkBodyTextContent(htmlInput, keyArray, readText) {
     const bodyElement = htmlInput.querySelector('body');
     let outputString = '';
     const bodytextContent = getInnerText(readText).replace(/\s+/g, ' ').trim().toLowerCase();
+    // console.log(bodytextContent);
     // console.log(bodytextContent);
     let totalWordsBody = bodytextContent.split(' ').length;
     let cntKeyword = 0;
@@ -30,18 +32,21 @@ export default function checkBodyTextContent(htmlInput, keyArray, readText) {
         if (cntWords > 1) cntLongtailKeyword++;
     }
     if (cntLongtailKeyword * 0.1 < keyArray.length) {
-        outputString = giveSuggestion(`<h5>Try to use some long-tail keywords, which are more specific and less competitive than short-tail keywords.</h5>`, outputString);
+        outputString = giveSuggestion(`Try to use some long-tail keywords, which are more specific and less competitive than short-tail keywords.%`, outputString);// h4 yellow
     }
     if (totalWordsBody * 0.05 > cntKeyword) {
-        outputString = giveSuggestion(`<h5>Its reccommended to use atleast 5% of keywords inside the text content.</h5>`, outputString);
+        outputString = giveSuggestion(`Its reccommended to use some more keywords inside the text content.%`, outputString);// h4 yellow
     }
     if (totalWordsBody * 0.20 < cntKeyword) {
-        outputString = giveSuggestion(`<h5>Please try to reduce some keywords on your page as search engines can penalize pages for seeing it as manipulation for ranking.</h5>`, outputString);
+        outputString = giveSuggestion(`Please try to reduce some keywords on your page as search engines can penalize pages for seeing it as manipulation for ranking.%`, outputString);// h4 yellow
     }
     let score = calculateFleschKincaid(bodytextContent);
     // console.log("Flesch-Kincaid Readability Score:", calculateFleschKincaid(bodytextContent));
-    if (score < 20) {
-        outputString = giveSuggestion(`<h5>The content is very difficult to read for the users according to Flesch-Kincaid Readability test.</h5>`, outputString);
+    if (score < 40) {
+        outputString = giveSuggestion(`The content is very difficult to read for the users according to Flesch-Kincaid Readability test and score is ${score}.%`, outputString);// h4 yellow
+    }
+    else {
+        outputString = giveSuggestion(`Flesch-Kincaid Readability score for your content is ${score}.%`,outputString);
     }
     objReturn.content = outputString;
     return objReturn;
