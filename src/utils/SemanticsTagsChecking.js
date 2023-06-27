@@ -3,7 +3,7 @@ import getInnerText from "./GetInnerText.js"
 export default function checkSemanticTags(htmlInput) {
 
     let objReturn = {
-        title: 'Semantic Tags Checking',
+        title: 'Recommendations for Semantic Tags',
         content: 'No Content Given',
         score: 20,
     }
@@ -22,7 +22,7 @@ export default function checkSemanticTags(htmlInput) {
 }
 function checkEmptyTags(htmlInput, outputString, isEmpty){
     // check this function
-    outputString = giveSuggestion(`Check for empty tags%`, outputString);// transparent h4
+    outputString = giveSuggestion(`Check for Empty tags%`, outputString);// transparent h4
     let allTags = htmlInput.querySelectorAll('body *');
     let emptyTags = new Map();
     // console.log(allTags);
@@ -36,28 +36,7 @@ function checkEmptyTags(htmlInput, outputString, isEmpty){
     }
     allTags.forEach(tag => {
         let tagName = tag.nodeName;
-        let tagText = getInnerText(tag.innerHTML).replace(/\s+/g, ' ').trim();
-        // if (tag.childNodes.length === 0) {
-        //     if (!emptyTags.has(tag.nodeName)) {
-        //         emptyTags.set(tag.nodeName, 1);
-        //     }
-        //     else {
-        //         let cnt = emptyTags.get(tag.nodeName);
-        //         emptyTags.set(tag.nodeName, cnt + 1);
-        //     }
-        //     isEmpty.push(tag);
-        // }
-        // if (tag.childNodes.length === 1 && hasOnlyWhitespaceContentOrNULL(tag.childNodes[0])) {
-        //     // console.log(tag.nodeName);
-        //     if (!emptyTags.has(tag.nodeName)) {
-        //         emptyTags.set(tag.nodeName, 1);
-        //     }
-        //     else {
-        //         let cnt = emptyTags.get(tag.nodeName);
-        //         emptyTags.set(tag.nodeName, cnt + 1);
-        //     }
-        //     isEmpty.push(tag);
-        // }
+        // let tagText = getInnerText(tag.innerHTML).replace(/\s+/g, ' ').trim();
         if (tagName === 'IMG') {
             if (!tag.getAttribute('src')) {
                 if (!emptyTags.has(tagName)) {
@@ -83,7 +62,7 @@ function checkEmptyTags(htmlInput, outputString, isEmpty){
                 isEmpty.push(tag);
             }
         }
-        else if(!tagText && tag.children === 0){
+        else if(tag.childNodes.length === 0){
             if (!emptyTags.has(tagName)) {
                 emptyTags.set(tagName, 1);
             } 
@@ -128,7 +107,7 @@ function checkMaintag(htmlInput, outputString, isEmpty) {
     }
     return outputString;
 }
-//2)article tag should contain some heading in it
+//2)article tag should contain some heading in it 
 // It should just not contain only text tags like <p> <span> etc , but should contain <img> <video> <audio>tags as well
 // article should be directly nested within <body> <main> <section>
 // article should not be nested within itself
@@ -188,8 +167,10 @@ function checkSectionTag(htmlInput, outputString, isEmpty) {
     if (allSectionTags.length == 0) return;
     for (let sectionTag of allSectionTags) {
         if (isEmpty.includes(sectionTag)) continue;
-        let sectionText = getInnerText(sectionTag.innerHTML).replace(/\s+/g, ' ').trim();
-        outputString = giveSuggestion(`Check for the Section tag ${getTruncateText(sectionText, 25)}%`, outputString);// transparent h4
+        let sectionText = getInnerText(sectionTag.innerHTML).replace(/\s+/g,' ').trim();
+        let truncatedText = getTruncateText(sectionText,25);
+        outputString = giveSuggestion(`Check for the Section tag ${truncatedText}%`, outputString);
+        if(!truncatedText || truncatedText === ' ')outputString = giveSuggestion(`This section is used as a wrapper%`,outputString)// yellow li
         let anyError = false;
         let childTags = sectionTag.children;
         let headingPresent = false;
@@ -251,7 +232,9 @@ function countPercentageNonSemantictags(htmlInput, outputString) {
         }
     }
     let percentage = (countNonSemantic / countAlltags) * 100;
-    if (percentage > 50) outputString = giveSuggestion(`Percentage of non semantic tags in the content is ${percentage.toFixed(2)},a good practice is to maintain maximum 50 percentage of nonsemantic tags`, outputString);// h6 yellow
+    if (percentage > 50) outputString = giveSuggestion(`Percentage of non semantic tags in the content is ${percentage.toFixed(2)},a good practice is to maintain maximum 50 percentage of nonsemantic tags`, outputString);
+    else if(percentage <= 20)outputString = giveSuggestion(`Its good that you have less percentage of non semantic tags in the content ${percentage.toFixed(2)}`,outputString);
+    // h6 yellow
     return outputString;
     // Limit for percentage of non semantic
 }

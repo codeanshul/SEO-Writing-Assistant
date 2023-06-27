@@ -38,7 +38,18 @@
   border: 2px solid black;
   justify-content: center;
   border-radius: 7px;
-  text-align: center;
+  /* text-align: center; */
   overflow: scroll;
   box-shadow: 4px 4px 6px rgba(68, 68, 68, 0.2);
+}
+ul{
+  list-style: none;
+}
+li{
+  display: flex;
+}
+.big-header-warning{
+  margin-left: 27px;
+  margin-bottom: 15px;
+  font-size: larger;
 }

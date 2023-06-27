@@ -5,7 +5,7 @@ import getInnerText from "./GetInnerText";
 export default function checkBodyTextContent(htmlInput, keyArray, readText) {
     // const textAnalysis = document.getElementById(`Text`);
     let objReturn = {
-        title: 'Text Checking',
+        title: 'Recommendations for Text Content',
         content: 'No content given',
         score: 0,
     }

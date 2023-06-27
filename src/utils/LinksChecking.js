@@ -2,7 +2,7 @@ export default function checkLinks(htmlInput,keyArray)
 {
     // console.log(keyArray);
     let objReturn = {
-        title: `Links Checking`,
+        title: `Recommendation for Links`,
         content: "No content given",
         score : 10,
     }
@@ -35,7 +35,7 @@ function externalLinksCheck(externalLinks,keyArray,outputString){
     let anyKeyword = false;// check if their exixts atleast one keyword in all the links
     for(let link of externalLinks)
     {
-        outputString = giveSuggestion(`Check for the external link%${link.href}randommm${link.text}%`,outputString);// tranparent h4
+        outputString = giveSuggestion(`Check for the external link ${link.href}randommm${link.text}%`,outputString);// tranparent h4
         let anyError = false;
         if(link.text.trim() == "") // if no anchor text
         {
@@ -75,7 +75,7 @@ function internalLinksCheck(internalLinks,keyArray,outputString)
     let allEmptyTextLink = true;
     for(let link of internalLinks)
     {
-        outputString = giveSuggestion(`Check for the internal link%${link.href}randommm${link.text}%`,outputString);// transparent h4
+        outputString = giveSuggestion(`Check for the internal link ${link.href}randommm${link.text}%`,outputString);// transparent h4
         // wont work if the link is starting with /
         let anyError = false;
         if(link.text.trim() == "") // if no anchor text

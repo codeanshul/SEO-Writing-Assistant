@@ -2,7 +2,7 @@ import imageCompression from "browser-image-compression";
 export default function checkOptimizedImagesWithAlt(htmlInput) {
 
     let objReturn = {
-        title: 'Image Checking',
+        title: 'Recommendation for Images',
         content: "No Content Given",
         score : 20,
     }
@@ -24,7 +24,10 @@ export default function checkOptimizedImagesWithAlt(htmlInput) {
             .then((isImageValid) => {
                 itemProcessed++;
                 if(isImageValid)outputString = checkImage(img, src, altText, outputString);
-                else console.log(`Not able to process this image ${src}`);
+                else {
+                    console.log(`Not able to process this image ${src}`);
+                    outputString = giveSuggestion(`Not able to process this image ${src}%`,outputString);
+                }
                 if (itemProcessed == images.length) {
                     // console.log(itemProcessed);
                     objReturn.content = outputString;
@@ -41,7 +44,7 @@ export default function checkOptimizedImagesWithAlt(htmlInput) {
 function checkImage(img, src, altText, outputString) {
 
     // let allErrorCheck = '';
-    outputString = giveSuggestion(`Image check for the image ${src}IMG%`, outputString);// transparent
+    outputString = giveSuggestion(`Image check for the image ${src}%`, outputString);// transparent
     let anyError = false;
     if (!altText) {
         outputString = giveSuggestion(`Image without alt attribute%`, outputString);// yellow

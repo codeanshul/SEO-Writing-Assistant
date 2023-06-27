@@ -17,10 +17,10 @@ const Output = ({htmlInput,keyArray,readText}) => {
     const linkData = checkLinks(htmlInput,keyArray);
     const textcheckData = checkBodyTextContent(htmlInput,keyArray,readText);
     const totalScore = headerData.score + imageData.score + semanticData.score + linkData.score + textcheckData.score;
-    // console.log(htmlInput);
+    // // console.log(htmlInput);
     return ( 
         <div className = 'rightside'id="displaying">
-            <h2 className = 'getrecommendation'><u>Get Recommendations</u></h2>
+            <h3 className = 'getrecommendation' style={{textAlign : 'center'}}><u>Suggestions for Good SEO Practice</u></h3>
             <div className='Score'>
 
             </div>
