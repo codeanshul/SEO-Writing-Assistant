@@ -28,7 +28,7 @@ export default function styleLinkString(linkData) {
         else if (str.includes('All okay with this link')) {
             listArray.push(<li><FontAwesomeIcon className = 'icon-no-warning'icon={faCheckCircle}/>{str}</li>);
         }
-        else if (str.includes('No keyword in all the external links of the content')) {
+        else if (str.includes("It's recommended to use some relevant keywords in anchor text")) {
             outputArray.push(<h4 className='big-header-warning'><li><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</li></h4>);
             ele = 'h4';
             bgColor = 'yellow';

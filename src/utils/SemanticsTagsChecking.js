@@ -12,18 +12,22 @@ export default function checkSemanticTags(htmlInput) {
     let outputString = '';
     let isEmpty = [];
     outputString = checkEmptyTags(htmlInput, outputString, isEmpty);
+    // console.log(outputString);
     outputString = checkMaintag(htmlInput, outputString, isEmpty);
+    console.log(outputString);
     outputString = checkArticleTag(htmlInput, outputString, isEmpty);
     outputString = checkSectionTag(htmlInput, outputString, isEmpty);
     outputString = checkDivNesting(htmlInput, outputString);
     outputString = countPercentageNonSemantictags(htmlInput, outputString);
+    // console.log(outputString);
     objReturn.content = outputString;
     return objReturn;
 }
 function checkEmptyTags(htmlInput, outputString, isEmpty){
     // check this function
     outputString = giveSuggestion(`Check for Empty tags%`, outputString);// transparent h4
-    let allTags = htmlInput.querySelectorAll('body *');
+    let allTags = htmlInput.getElementsByTagName('*');
+    // console.log(allTags);
     let emptyTags = new Map();
     // console.log(allTags);
     allTags = seperateScript(allTags);
@@ -75,18 +79,18 @@ function checkEmptyTags(htmlInput, outputString, isEmpty){
     });
     if (emptyTags.size === 0)outputString = giveSuggestion('No empty tags in the page%',outputString);
     for (let [key, value] of emptyTags) {
-        outputString = giveSuggestion(`There are ${value} empty tags of ${key}%`, outputString);// yellow li
+        outputString = giveSuggestion(`There are ${value} empty tags of ${key.toLowerCase()}%`, outputString);// yellow li
     }
     return outputString;
 }
 //1) check for main tag , main's parent should be body tag 
 // main tag should not contain <header> , <nav> , <footer> tags inside it -> Done
 function checkMaintag(htmlInput, outputString, isEmpty) {
-    outputString = giveSuggestion(`Check for main tag%`, outputString);// transparent h4
+    outputString = giveSuggestion(`Main tag Check%`, outputString);// transparent h4
     const mainTag = htmlInput.getElementsByTagName('main');
     if (mainTag.length == 0) {
         outputString = giveSuggestion(`Add atleast one mainTag in your content%`, outputString);// red li 
-        return;
+        return outputString;
     }
     else if (mainTag.length > 1) {
         outputString = giveSuggestion(`There should exist only one main tag in a content%`, outputString);// red li
@@ -121,7 +125,7 @@ function checkArticleTag(htmlInput, outputString, isEmpty) {
 
         if (isEmpty.includes(articleTag)) continue;
         let articleText = getInnerText(articleTag.innerHTML).replace(/\s+/g, ' ').trim();
-        outputString = giveSuggestion(`Check for the Article tag ${getTruncateText(articleText, 25)}%`, outputString);// transparent h4
+        outputString = giveSuggestion(`Article check for ${getTruncateText(articleText, 25)}%`, outputString);// transparent h4
         let allChild = articleTag.children;
         let notAllTextTag = false;
         let headingPresent = false;
@@ -164,12 +168,12 @@ function checkArticleTag(htmlInput, outputString, isEmpty) {
 function checkSectionTag(htmlInput, outputString, isEmpty) {
     // outputString = giveSuggestion(`<h4> Check for section tag </h4> `, outputString);
     const allSectionTags = htmlInput.getElementsByTagName('section');
-    if (allSectionTags.length == 0) return;
+    if (allSectionTags.length == 0) return outputString;
     for (let sectionTag of allSectionTags) {
         if (isEmpty.includes(sectionTag)) continue;
         let sectionText = getInnerText(sectionTag.innerHTML).replace(/\s+/g,' ').trim();
         let truncatedText = getTruncateText(sectionText,25);
-        outputString = giveSuggestion(`Check for the Section tag ${truncatedText}%`, outputString);
+        outputString = giveSuggestion(`Section check for  ${truncatedText}%`, outputString);
         if(!truncatedText || truncatedText === ' ')outputString = giveSuggestion(`This section is used as a wrapper%`,outputString)// yellow li
         let anyError = false;
         let childTags = sectionTag.children;
@@ -195,7 +199,8 @@ function checkSectionTag(htmlInput, outputString, isEmpty) {
 function checkDivNesting(htmlInput, outputString) {
 
     const allDivs = htmlInput.querySelectorAll("div");
-    outputString = giveSuggestion(`Check for nesting of div tags%`, outputString);// transparent h4
+    if(allDivs.length === 0)return outputString;
+    outputString = giveSuggestion(`Maximal nesting div tags check%`, outputString);// transparent h4
     let isSeenDiv = new Map();
     function nestingLevelDfs(tag) {
         isSeenDiv.set(tag, 1);
@@ -232,8 +237,8 @@ function countPercentageNonSemantictags(htmlInput, outputString) {
         }
     }
     let percentage = (countNonSemantic / countAlltags) * 100;
-    if (percentage > 50) outputString = giveSuggestion(`Percentage of non semantic tags in the content is ${percentage.toFixed(2)},a good practice is to maintain maximum 50 percentage of nonsemantic tags`, outputString);
-    else if(percentage <= 20)outputString = giveSuggestion(`Its good that you have less percentage of non semantic tags in the content ${percentage.toFixed(2)}`,outputString);
+    if (percentage > 50) outputString = giveSuggestion(`Percentage of non semantic tags in the content is ${percentage.toFixed(2)},a good practice is to maintain maximum 50 percentage of nonsemantic tags%`, outputString);
+    else if(percentage <= 20)outputString = giveSuggestion(`Its good that you have less percentage of non semantic tags in the content ${percentage.toFixed(2)}%`,outputString);
     // h6 yellow
     return outputString;
     // Limit for percentage of non semantic

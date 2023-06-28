@@ -45,13 +45,21 @@ function checkImage(img, src, altText, outputString) {
 
     // let allErrorCheck = '';
     outputString = giveSuggestion(`Image check for the image ${src}%`, outputString);// transparent
+    const format = getImageFormatFromURL(src);
+    const possibleExtension = ['bmp','gif','jpeg','png','webp','svg'];
     let anyError = false;
-    if (!altText) {
-        outputString = giveSuggestion(`Image without alt attribute%`, outputString);// yellow
+    if(!possibleExtension.includes(format))
+    {
+        outputString = giveSuggestion(`Google Images supports images in the following formats: BMP, GIF, JPEG, PNG, WebP, and SVG%`, outputString);// yellow
         anyError = true;
     }
-    if (!getImageFormatFromURL(src)) {
-        outputString = giveSuggestion(`Please prefer taking recommended image format jpeg , png , webp%`, outputString);// yellow
+    if(format != 'avif' && format != 'webp')
+    {
+        outputString = giveSuggestion(`Image formats like WebP and AVIF often provide better compression than PNG or JPEG, which means faster downloads and less data consumption.%`, outputString);
+        anyError = true;
+    }
+    if (!altText) {
+        outputString = giveSuggestion(`Add alt attribute for the image as it helps crawler to better understand what the image is about%`, outputString);// yellow
         anyError = true;
     }
     if (checkImageCompression(src)) {
@@ -59,7 +67,7 @@ function checkImage(img, src, altText, outputString) {
         anyError = true;
     }
     if (hasCrypticCode(src)) {
-        outputString = giveSuggestion('Please make the src link of the image a little descriptive%', outputString);// yellow
+        outputString = giveSuggestion('Src link of the image shoulld be descriptive as it can help user understand what they can expect when they click on it%', outputString);// yellow
         anyError = true;
     }
     if (!isLazyLoadEnable(img)) {
@@ -129,12 +137,7 @@ function hasCrypticCode(src) {
 }
 function getImageFormatFromURL(url) {
     const extension = url.split('.').pop().toLowerCase();
-    const possibleExtension = ['jpeg', 'png', 'webp'];
-    if (!possibleExtension.includes(extension)) {
-        // console.log(`Please prefer taking recommended image format jpeg , png , webp`);
-        return false;
-    }
-    return true;
+    return extension;
 }
 function giveSuggestion(text, outputString) {
 

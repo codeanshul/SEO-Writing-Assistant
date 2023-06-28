@@ -11,12 +11,12 @@ export default function styleHeaderString(headerData) {
             if(listArray.length)listArray = [];
             outputArray.push(<h4 className='big-header-warning'><li><FontAwesomeIcon className = 'icon-high-warning'icon={faExclamationTriangle}/>{str}</li></h4>);
         }
-        else if (str.includes("Your content's first heading should be h1 tag only")) {
+        else if (str.includes("It is advised to have content's first heading as h1")) {
             outputArray = insertLists(listArray,outputArray,listHeading);
             if(listArray.length)listArray = [];
             outputArray.push(<h4 className='big-header-warning'><li><FontAwesomeIcon className = 'icon-high-warning'icon={faExclamationTriangle}/>{str}</li></h4>);
         }
-        else if (str.includes("There should be only 1 h1 tag in the page")) {
+        else if (str.includes("It is advised to have only 1 H1 tag in a page as having")) {
             outputArray = insertLists(listArray,outputArray,listHeading);
             if(listArray.length)listArray = [];
             outputArray.push(<h4 className='big-header-warning'><li><FontAwesomeIcon className = 'icon-high-warning'icon={faExclamationTriangle}/>{str}</li></h4>);
@@ -31,7 +31,7 @@ export default function styleHeaderString(headerData) {
             if(listArray.length)listArray = [];
             outputArray.push(<h4 className='big-header-warning'><li><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</li></h4>);
         }
-        else if (str.includes("No keywords in the heading , Please try to add some")) {
+        else if (str.includes("Please try to add some keywords because they help search")) {
             outputArray = insertLists(listArray,outputArray,listHeading);
             if(listArray.length)listArray = [];
             outputArray.push(<h4 className='big-header-warning'><li><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</li></h4>);

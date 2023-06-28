@@ -20,7 +20,7 @@ export default function checkHeaders(htmlInput, keyArray) {
     }
     // check for the first header tag in the content , if it is h1 then , else report
     if (headerTags[0].tagName != "H1") {
-        outputString = giveSuggestion(`Your content's first heading should be h1 tag only , You have ${headerTags[0].tagName} %`,outputString);// red
+        outputString = giveSuggestion(`It is advised to have content's first heading as h1 , You have ${headerTags[0].tagName}.%`,outputString);// red
     }
     // check for number of h1 heading in the content , if it is more than 1 report
     outputString = countH1Tags(headerTags,outputString);
@@ -43,12 +43,8 @@ function filtertags(headerTags,outputString) {
         let tag = headerTags[i].tagName;
         
         let headerText = getInnerText(headerTags[i].innerHTML).replace(/\s+/g, ' ').trim();
-        // console.log(headerText);
-        // getting a error in a page source.
-        if(headerText.length == 0 || headerText.length == 1)
-        {
+        if(headerText.length == 0 || headerText.length == 1){
             console.log("Empty Header tag");
-            // outputString = giveSuggestion(`You have a ${tag}tag which has no content in it .`,outputString);
         }
         else {
             contenttags.push(headerTags[i]);
@@ -66,17 +62,14 @@ function countH1Tags(headerTags,outputString) {
         }
     }
     if (cnth1 > 1) {
-        outputString = giveSuggestion(`There should be only 1 h1 tag in the page,You have ${cnth1}%`,outputString);// yellow
+        outputString = giveSuggestion(`It is advised to have only 1 H1 tag in a page as having multiple H1 tags can make it difficult for search engines and users to understand the main topic of the page.%`,outputString);// yellow
     }
     return outputString;
 }
 function checkForKeywordsHeading(firstHeaderTag, keyArray,outputString) {
     let Heading = firstHeaderTag.childNodes[0].textContent.trim();
     if (Heading.length > 60) {
-        outputString = giveSuggestion(`Please try to reduce the length of your heading%`,outputString);// yellow
-    }
-    else if (Heading.length < 5) {
-        outputString = giveSuggestion(`Please try to enlarge the length of your heading%`,outputString);// yellow
+        outputString = giveSuggestion(`Please try to reduce the length of your heading as search engines will truncate headings that are longer than 60 characters%`,outputString);// yellow
     }
     // checking for count of keywords in the array 
     let headingArray = Heading.replace(/\s+/g, ' ').trim().toLowerCase().split(' ');
@@ -85,7 +78,7 @@ function checkForKeywordsHeading(firstHeaderTag, keyArray,outputString) {
         if (headingArray.includes(element)) anyKeywordHeading = true;
     });
     if (!anyKeywordHeading) {
-        outputString = giveSuggestion(`No keywords in the heading , Please try to add some%`,outputString);// yellow
+        outputString = giveSuggestion(`Please try to add some keywords in the heading because they help search engines understand the content of your page.%`,outputString);// yellow
     }
     // console.log(outputString);
     return outputString;

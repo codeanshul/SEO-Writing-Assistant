@@ -1,0 +1,110 @@
+.htmlinput {
+    height: 81%;
+    width: 93%;
+    text-align: justify;
+    vertical-align: top;
+    white-space: pre-wrap;
+    padding: 10px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    border: none;
+    background: #f5f5f5;
+    color: '#333';
+    margin-top: 3px;
+    margin-right: 20px;
+    margin-left: 20px;
+    box-shadow: 5px 5px 7px rgba(68, 68, 68, 0.2);
+}
+
+.input {
+    flex: 0.6;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin: 5px;
+    height: 92vh;
+    width: 30%;
+    align-items: center;
+    border: 2px solid black;
+    justify-content: center;
+    border-radius: 7px;
+    text-align: center;
+}
+
+.button {
+    margin-top: 24px;
+    margin-bottom: 23px;
+    margin-right: 16px;
+    margin-left: 0px;
+    padding: 0px 2px;
+    border-radius: 4px;
+    border: none;
+    background: #007bff;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+    float: right;
+    width: 25%;
+    height: 6%;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+@media(max-width : 1150px) {
+    .button {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 960px) {
+    .button {
+        font-size: 11px;
+        /* Further decreased font size for even smaller screens */
+    }
+}
+
+@media(max-width : 780px) {
+    .button {
+        font-size: 9px;
+    }
+}
+
+@media(max-width : 650px) {
+    .button {
+        font-size: 8px;
+    }
+}
+
+@media(max-width: 520px) {
+    .button {
+        font-size: 7px;
+    }
+}
+
+@media(max-width: 450px) {
+    .button {
+        font-size: 6px;
+    }
+}
+
+.keyword {
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 14px;
+    margin-bottom: 10px;
+    width: 40%;
+    height: 10%;
+    padding-left: 4px;
+    padding-right: 6px;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    border: 1px solid black;
+    border-radius: 6px;
+    box-shadow: 5px 5px 7px rgba(68, 68, 68, 0.2);
+}

@@ -1,40 +1,87 @@
 .accordion {
-    border: 1px solid #ddd;
-    box-shadow: 4px 4px 6px rgba(68, 68, 68, 0.2);
-    margin-top: 15px;
-    margin-right: 6px;
-    margin-left: 9px;
-    border-radius: 15px;
+  border: 1px solid #ddd;
+  box-shadow: 4px 4px 6px rgba(68, 68, 68, 0.2);
+  margin-top: 15px;
+  margin-right: 6px;
+  margin-left: 9px;
+  border-radius: 15px;
 
-  }
-  
-  .accordion-header {
-    background-color: #f5f5f5;
-    padding: 10px;
-    cursor: pointer;
-    display: flex;
-  }
-  .accordion-content {
-    margin-bottom: 30px;
-    padding: 10px;
-    display: block;
-  }
-  
-  .accordion-content.show {
-    display: block;
-  }
-  .accordian-title {
-    flex-grow: 1;
-  }
-  .accordian-arrow {
-    margin-right: 0.5rem;
-    margin-top: 0.5rem;
-    transform: rotate(0);
-    transition: transform 0.3s;
+}
+.accordian-title{
+  text-align: center;
+}
+.accordion-header {
+  background-color: #f5f5f5;
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+}
 
-  }
-  .accordion.collapsed .accordian-arrow {
-    transform: rotate(-90deg);
-  }
+.accordion-content {
+  margin-bottom: 30px;
+  padding: 10px;
+  display: block;
+  margin-top : 10px;
+  margin-bottom : 10px;
+}
 
-  
+.accordion-content.show {
+  display: block;
+}
+
+.accordian-title {
+  flex-grow: 1;
+}
+
+.accordian-arrow {
+  margin-right: 0.5rem;
+  margin-top: 0.5rem;
+  transform: rotate(0);
+  transition: transform 0.3s;
+
+}
+
+.accordion.collapsed .accordian-arrow {
+  transform: rotate(-90deg);
+}
+
+ul {
+  list-style: none;
+}
+
+li {
+  display: flex;
+}
+
+.big-header-warning {
+  margin-left: 27px;
+  margin-bottom: 15px;
+  font-size: larger;
+}
+
+.icon-high-warning {
+  display: inline-flex;
+  align-items: center;
+  color: red;
+  padding-top: 4px;
+  margin-right: 0.5rem;
+
+}
+
+.icon-low-warning {
+  display: inline-flex;
+  align-items: center;
+  color: rgba(255, 81, 0, 0.689);
+  padding-top: 4px;
+  margin-right: 0.5rem;
+
+}
+
+.icon-no-warning {
+  display: inline-flex;
+  align-items: center;
+  color: green;
+  padding-top: 4px;
+  margin-right: 0.5rem;
+
+}

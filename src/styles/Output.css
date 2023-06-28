@@ -1,0 +1,19 @@
+.output {
+    flex: 0.8;
+    margin: 5px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    height: 92vh;
+    width: 50vw;
+    align-items: center;
+    border: 2px solid black;
+    justify-content: center;
+    border-radius: 7px;
+    /* text-align: center; */
+    overflow: scroll;
+    box-shadow: 4px 4px 6px rgba(68, 68, 68, 0.2);
+}
+.get-recommendation{
+    text-align: center;
+}

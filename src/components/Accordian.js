@@ -1,17 +1,15 @@
 import React, { useState, useEffect, contentRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import '../styles/Accordian.css'
 import styleHeaderString from '../utils/StyleHeaderString';
 import styleImageString from '../utils/StyleImageString';
 import styleSemanticString from '../utils/StyleSemanticString';
 import styleLinkString from '../utils/StyleLinkString';
 import styleTextString from '../utils/StyleTextString';
-import 'bootstrap/dist/css/bootstrap.css';
 const Accordion = ({ data }) => {
 
     const [isOpen, setIsOpen] = useState(false);
-
     const toggleAccordion = () => {
         setIsOpen(!isOpen);
     };
@@ -29,13 +27,13 @@ const Accordion = ({ data }) => {
                     icon={isOpen ? faChevronUp : faChevronDown}
                     className="accordian-arrow"
                 />
-                <span className='accordian-title' >
-                    <h3 style={{textAlign : 'center'}}>{suggestionType}</h3>
+                <span className='accordian-title'>
+                    <h3>{suggestionType}</h3>
                 </span>
             </div>
             {
                 isOpen &&
-                <div className="accordion-content" style={{marginTop : '10px',marginBottom : '10px'}}>
+                <div className="accordion-content">
                     {
                         styledStrings.map((currentString) => {
                            
@@ -47,9 +45,4 @@ const Accordion = ({ data }) => {
         </div>
     );
 };
-
 export default Accordion;
-// dangerouslySetInnerHTML={{ __html : data.content}
-// dangerouslySetInnerHTML={{ __html : data.title}}
-// dangerouslySetInnerHTML={{ __html: data.content }}
-// return React.createElement(element, { key: index, style: { backgroundColor } }, part);

@@ -1,6 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationTriangle, faExclamationCircle, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
-import '../styles/Icon.css'
 export default function styleImageString(imageData) {
     const parts = imageData.split("%");
     let outputArray = [];
@@ -22,7 +21,10 @@ export default function styleImageString(imageData) {
         else if (str.includes("Image without alt attribute")) {
             listArray.push(<li><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</li>);
         }
-        else if (str.includes("Please prefer taking recommended image format jpeg , png , webp")) {
+        else if (str.includes("Google Images supports images in the following formats: BMP, GIF, JPEG, PNG, WebP, and SVG")) {
+            listArray.push(<li><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</li>);
+        }
+        else if (str.includes("Image formats like WebP and AVIF often provide better")) {
             listArray.push(<li><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</li>);
         }
         else if (str.includes("Image can be further compressed")) {

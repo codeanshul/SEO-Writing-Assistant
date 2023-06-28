@@ -1,26 +1,13 @@
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
+import {BrowserRouter as Router,Switch,Route,Link} from "react-router-dom";
 import Navbar from "./components/Navbar";
-import TextInput from "./components/FrontPage";
-// import OutputDisplay from "./components/Output";
-
+import BodyContent from "./components/BodyContent";
 function App() {
-
-  // takeFile();
-
   return (
     <>
-
       <Navbar />
-      <TextInput />
-
+      <BodyContent />
     </>
 
   );
 }
-
 export default App;

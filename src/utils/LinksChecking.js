@@ -39,7 +39,7 @@ function externalLinksCheck(externalLinks,keyArray,outputString){
         let anyError = false;
         if(link.text.trim() == "") // if no anchor text
         {
-            outputString = giveSuggestion(`Add anchor text to your link%`,outputString);// red li
+            outputString = giveSuggestion(`Add anchor text to your link to give more imformation about the link to the user before clicking it.%`,outputString);// red li
             anyError = true;
         }
         else // check for keywords inside link
@@ -54,14 +54,14 @@ function externalLinksCheck(externalLinks,keyArray,outputString){
         }
         if(link.rel !== 'nofollow'){
             anyError = true;
-            outputString = giveSuggestion(`Add a rel attribute as nofollow in the link%`,outputString);// yellow li
+            outputString = giveSuggestion(`Add a rel attribute as nofollow in the link , as search engines shouldn’t follow these links authority to the link target.%`,outputString);// yellow li
         }
         if(!anyError){
             outputString = giveSuggestion(`All okay with this link%`,outputString);// green li
         }
     }
     if(!anyKeyword){
-        outputString = giveSuggestion(`No keyword in all the external links of the content%`,outputString);// yellow h4
+        outputString = giveSuggestion(`It's recommended to use some relevant keywords in anchor text as you provide additional signals to search engines about the content of the linked page%`,outputString);// yellow h4
     }
     return outputString;
 }
@@ -80,7 +80,7 @@ function internalLinksCheck(internalLinks,keyArray,outputString)
         let anyError = false;
         if(link.text.trim() == "") // if no anchor text
         {
-            outputString = giveSuggestion(`Add anchor text to your link%`,outputString);// red li
+            outputString = giveSuggestion(`Add anchor text to your link to give more imformation about the link to the user before clicking it.%`,outputString);// red li
             anyError = true;
         }
         else // check for keywords inside link
