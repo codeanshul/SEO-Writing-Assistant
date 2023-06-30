@@ -17,3 +17,8 @@
 .get-recommendation{
     text-align: center;
 }
+a{
+    display: inline;
+    font-size: 17px;
+    margin: 4px;
+}

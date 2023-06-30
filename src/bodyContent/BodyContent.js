@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import '../styles/BodyContent.css'
-import Output from './Output';
-import Input from './Input';
+import Output from '../output/Output';
+import Input from '../input/Input';
+import './bodyContent.css'
 const BodyContent = () => {
     const [text, setText] = useState('');
-    const [keyword, setKeyword] = useState('lorem,ipsum');
-    const [htmlContent,setHtmlContent] = useState('');
-    const [keyArray,setKeyArray] = useState('');
+    const [keyword, setKeyword] = useState('');
+    const [htmlContent, setHtmlContent] = useState('');
+    const [keyArray, setKeyArray] = useState('');
     const handleInputChangeHTML = (event) => {
         setText(event.target.value);
     };
@@ -15,13 +15,13 @@ const BodyContent = () => {
     };
     const handleButtonClick = () => {
 
-           fetch('input.html')
-                .then((res) => res.text())
-                .then((res) => {
-                    setText(res);
-                    processHTML(res);
-                })
-                .catch((err) => console.log(err))
+        fetch('input.html')
+            .then((res) => res.text())
+            .then((res) => {
+                setText(res);
+                processHTML(res);
+            })
+            .catch((err) => console.log(err))
         // if(text)processHTML(text);
         function processHTML(contents) {
             // Performing operations on the HTML contents
@@ -37,9 +37,9 @@ const BodyContent = () => {
 
     return (
         <div className='page'>
-            <Input handleButtonClick = {handleButtonClick} handleInputChangeHTML = {handleInputChangeHTML} handleInputChangeKey = {handleInputChangeHTML} text = {text} keyword = {keyword}>
+            <Input handleButtonClick={handleButtonClick} handleInputChangeHTML={handleInputChangeHTML} handleInputChangeKey={handleInputChangeKey} text={text} keyword={keyword}>
             </Input>
-            <Output htmlInput={htmlContent} keyArray={keyArray} readText = {text}>
+            <Output htmlInput={htmlContent} keyArray={keyArray} readText={text}>
             </Output>
         </div>
     );

@@ -1,5 +1,5 @@
 import React from 'react'
-import '../styles/ScoreDisplay.css'
+import './scoreDisplay.css'
 
 const ScoreDisplay = ({ score }) => {
   let backgroundColorScore;
@@ -11,7 +11,7 @@ const ScoreDisplay = ({ score }) => {
     <div className="score-display" style={{ display: 'flex', alignItems: 'center'}}>
       <div className="score-circle" style={{backgroundColor : backgroundColorScore}}>
         <div className="score">
-            {score}
+            {score.toFixed(1)}
         </div>
       </div>
     </div>

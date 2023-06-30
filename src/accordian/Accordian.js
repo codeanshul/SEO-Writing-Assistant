@@ -1,12 +1,12 @@
 import React, { useState, useEffect, contentRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
-import '../styles/Accordian.css'
-import styleHeaderString from '../utils/StyleHeaderString';
-import styleImageString from '../utils/StyleImageString';
-import styleSemanticString from '../utils/StyleSemanticString';
-import styleLinkString from '../utils/StyleLinkString';
-import styleTextString from '../utils/StyleTextString';
+import './accordian.css'
+import styleHeaderString from '../utils/styleHeaderString';
+import styleImageString from '../utils/styleImageString';
+import styleSemanticString from '../utils/styleSemanticString';
+import styleLinkString from '../utils/styleLinkString';
+import styleTextString from '../utils/styleTextString';
 const Accordion = ({ data }) => {
 
     const [isOpen, setIsOpen] = useState(false);
@@ -20,12 +20,16 @@ const Accordion = ({ data }) => {
     else if(suggestionType.includes('Semantic'))styledStrings = styleSemanticString(data.content);
     else if(suggestionType.includes('Links'))styledStrings = styleLinkString(data.content);
     else if(suggestionType.includes('Text'))styledStrings = styleTextString(data.content);
+    const rotation = isOpen ? '0deg' : '90deg';
     return (
+       
         <div className="accordion">
             <div className="accordion-header" onClick={toggleAccordion}>
+                
                 <FontAwesomeIcon
-                    icon={isOpen ? faChevronUp : faChevronDown}
+                    icon={isOpen ? faChevronDown : faChevronUp}
                     className="accordian-arrow"
+                    style={{transform : `rotate(${rotation})`}}
                 />
                 <span className='accordian-title'>
                     <h3>{suggestionType}</h3>

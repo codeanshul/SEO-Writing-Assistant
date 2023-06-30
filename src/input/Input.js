@@ -1,9 +1,9 @@
 import React from 'react'
-import '../styles/Input.css'
+import './input.css'
 const Input = (props) => {
   return (
         <div className='input'>
-                <h2> HTML Input</h2>
+                <h2> <u>HTML Input </u></h2>
                 <textarea
                     className='htmlinput'
                     type="text"

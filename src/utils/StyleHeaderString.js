@@ -6,54 +6,64 @@ export default function styleHeaderString(headerData) {
     let listArray = [];
     let listHeading;
     parts.map((str, index) => {
-        if (str.includes('No header tags')) {
-            outputArray = insertLists(listArray,outputArray,listHeading);
-            if(listArray.length)listArray = [];
-            outputArray.push(<h4 className='big-header-warning'><li><FontAwesomeIcon className = 'icon-high-warning'icon={faExclamationTriangle}/>{str}</li></h4>);
-        }
-        else if (str.includes("It is advised to have content's first heading as h1")) {
-            outputArray = insertLists(listArray,outputArray,listHeading);
-            if(listArray.length)listArray = [];
-            outputArray.push(<h4 className='big-header-warning'><li><FontAwesomeIcon className = 'icon-high-warning'icon={faExclamationTriangle}/>{str}</li></h4>);
-        }
-        else if (str.includes("It is advised to have only 1 H1 tag in a page as having")) {
-            outputArray = insertLists(listArray,outputArray,listHeading);
-            if(listArray.length)listArray = [];
-            outputArray.push(<h4 className='big-header-warning'><li><FontAwesomeIcon className = 'icon-high-warning'icon={faExclamationTriangle}/>{str}</li></h4>);
-        }
-        else if (str.includes("Please try to reduce the length of your heading")) {
-            outputArray = insertLists(listArray,outputArray,listHeading);
-            if(listArray.length)listArray = [];
-            outputArray.push(<h4 className='big-header-warning'><li><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</li></h4>);
-        }
-        else if (str.includes("Please try to enlarge the length of your heading")) {
-            outputArray = insertLists(listArray,outputArray,listHeading);
-            if(listArray.length)listArray = [];
-            outputArray.push(<h4 className='big-header-warning'><li><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</li></h4>);
-        }
-        else if (str.includes("Please try to add some keywords because they help search")) {
-            outputArray = insertLists(listArray,outputArray,listHeading);
-            if(listArray.length)listArray = [];
-            outputArray.push(<h4 className='big-header-warning'><li><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</li></h4>);
-        }
-        else if (str.includes("tag above this tag")) {
-            // console.log(str);
-            listArray.push(<li><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</li>);
-        }
-        else {
-            // console.log(listHeading);
-            outputArray = insertLists(listArray,outputArray,listHeading);
-            if(listArray.length)listArray = [];
-            listHeading = str;
+        switch(true){
+            case str.includes('No header tags'):
+                outputArray = insertLists(listArray,outputArray,listHeading);
+                if(listArray.length)listArray = [];
+                outputArray.push(<p className='big-header-warning'><li><FontAwesomeIcon className = 'icon-high-warning'icon={faExclamationTriangle}/>{str}</li></p>);
+                break;
+            case str.includes("It is advised to have content's first heading as h1"):
+                outputArray = insertLists(listArray,outputArray,listHeading);
+                if(listArray.length)listArray = [];
+                outputArray.push(<p className='big-header-warning'><li><FontAwesomeIcon className = 'icon-high-warning'icon={faExclamationTriangle}/>{str}</li></p>);
+                break;
+            case str.includes("It is advised to have only 1 H1 tag in a page as having"):
+                outputArray = insertLists(listArray,outputArray,listHeading);
+                if(listArray.length)listArray = [];
+                outputArray.push(<p className='big-header-warning'><li><FontAwesomeIcon className = 'icon-high-warning'icon={faExclamationTriangle}/>{str}</li></p>);
+                break;
+            case str.includes("Please try to reduce the length of your heading"):
+                outputArray = insertLists(listArray,outputArray,listHeading);
+                if(listArray.length)listArray = [];
+                outputArray.push(<p className='big-header-warning'><li><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</li></p>);
+                break;
+            case str.includes("Please try to enlarge the length of your heading"):
+                outputArray = insertLists(listArray,outputArray,listHeading);
+                if(listArray.length)listArray = [];
+                outputArray.push(<p className='big-header-warning'><li><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</li></p>);
+                break;
+            case str.includes("Please try to add some keywords in the heading because they help search"):
+                outputArray = insertLists(listArray,outputArray,listHeading);
+                if(listArray.length)listArray = [];
+                outputArray.push(<p className='big-header-warning'><li><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</li></p>);
+                break;
+            case str.includes("tag above this tag") :
+                listArray.push(<li><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</li>);
+                break;
+            case str.includes("Heirarchy incosistency found for the header") :
+                outputArray = insertLists(listArray,outputArray,listHeading);
+                if(listArray.length)listArray = [];
+                listHeading = str;
+                break;
+            case str.includes('All okay with the header tags'):
+                outputArray.push(<p className='big-header-warning'><li><FontAwesomeIcon className = 'icon-no-warning'icon={faCheckCircle}/>{str}</li></p>);
+                break;
+            default :
+                // outputArray.push(<p className='big-header-warning'><li><FontAwesomeIcon className = 'icon-no-warning'icon={faCheckCircle}/>{str}</li></p>);
+                
         }
     })
     outputArray = insertLists(listArray,outputArray,listHeading);
     return outputArray;
 }
 function insertLists(listArray,outputArray,listHeading) {
-    // console.log(listHeading);
     if (listArray.length === 0)return outputArray;
-    outputArray.push(<ul> <h4 className='big-header-warning'>{listHeading.slice(0,43)}<i>{listHeading.slice(43,listHeading.length)}</i></h4>{
+    if(!listHeading)
+    {
+        console.log(listArray);
+        return outputArray;
+    }
+    outputArray.push(<ul> <p className='big-header-warning'>{listHeading.slice(0,43)}<i>{listHeading.slice(43,listHeading.length)}</i></p>{
         listArray.map((str) => {
             return str;
         })
