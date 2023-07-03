@@ -1,6 +1,6 @@
-import {BrowserRouter as Router,Switch,Route,Link} from "react-router-dom";
 import { Navbar } from "./navbar";
 import BodyContent from "./bodyContent/BodyContent";
+import React from "react";
 function App() {
   return (
     <>

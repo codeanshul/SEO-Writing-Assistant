@@ -1,32 +1,28 @@
 import imageCompression from "browser-image-compression";
-export default async function checkOptimizedImagesWithAlt(htmlInput){
-
+export default async function checkOptimizedImagesWithAlt(htmlInput: HTMLElement) {
     let objReturn = {
         title: 'Images',
         content: "Loading Page....",
         score: 0
     }
-    //return objReturn;
-    if (htmlInput === '') return objReturn;
-    let outputString = '';
+    if(htmlInput && htmlInput.innerHTML.trim() === '')return objReturn;
+    let outputString : string = '';
     const images = htmlInput.querySelectorAll('img');
     if (images.length == 0) {
         outputString = giveSuggestion(`No images in the article , Please add some relevant image so that results can become much more useful%`, outputString);// yellow
         objReturn.content = outputString;
         return objReturn;
     }
-    let itemProcessed = 0;
+    let itemProcessed : number = 0;
     let totImagesScore = images.length * 100;
     for (let img of images) {
         let altText = img.getAttribute('alt');
-
-        if(altText === null && altText == undefined)altText = '';
-        // console.log(altText);
-        const src = img.getAttribute('src');
+        if (altText === null && altText == undefined) altText = '';
+        const src = img.getAttribute('src') || '';
         const isImageValid = await checkImageSrc(src);
         itemProcessed++;
         if (isImageValid) {
-            let checkImageObj = await checkImage(img, src, altText, outputString, totImagesScore);
+            const checkImageObj = await checkImage(img, src, altText, outputString, totImagesScore);
             outputString = checkImageObj.string;
             totImagesScore = checkImageObj.src;
         }
@@ -37,40 +33,37 @@ export default async function checkOptimizedImagesWithAlt(htmlInput){
         }
         if (itemProcessed == images.length) {
             objReturn.content = outputString;
-            // console.log(totImagesScore);
             objReturn.score = (totImagesScore / images.length) * 0.25;
             return objReturn;
         }
     }
     return objReturn;
 }
-async function checkImage(img, src, altText, outputString, score) {
+async function checkImage(img: Element, src: string, altText: string, outputString: string, score: number) {
 
-    // let allErrorCheck = '';
-    // console.log(altText);
-    let imageTitle = altText;
-    if(hasOnlyWhitespaceContentOrNULL(altText))imageTitle = 'IMG';
+    let imageTitle: string = altText;
+    if (hasOnlyWhitespaceContentOrNULL(altText)) imageTitle = 'IMG';
     outputString = giveSuggestion(`Image check for the image ${src}randommm${imageTitle}%`, outputString);// transparent
     const format = getImageFormatFromURL(src);
     const possibleExtension = ['bmp', 'gif', 'jpeg', 'png', 'webp', 'svg'];
     let anyError = false;
     const data = await checkImageCompression(src);
-    if(data.isCompressed)
-    {
-        score -= 20;
-        outputString = giveSuggestion(`Image can be further compressed , Actual Image size : ${data.originalSize} Compressed Image Size : ${data.compressSize}%`, outputString);// yellow
+    const dataImageCompress = data && data.isCompressed;
+    if (dataImageCompress) {
+        score -= 20; 
+        outputString = giveSuggestion(`Image can be further compressed , Actual Image size : ${data.originalSize} KB Compressed Image Size : ${data.compressSize} KB%`, outputString);// yellow
         anyError = true;
     }
     if (!possibleExtension.includes(format)) {
         // 20
         score -= 20;
-        outputString = giveSuggestion(`Google Images supports images in the following formats: BMP, GIF, JPEG, PNG, WebP, and SVG%`, outputString);// yellow
+        outputString = giveSuggestion(`Google Images supports images in the following formats: BMP, GIF, JPEG, PNG, WebP, and SVG but your format is ${format}%`, outputString);// yellow
         anyError = true;
     }
-    if (format != 'avif' && format != 'webp') {
+    if ((format == 'png' || format == 'jpeg')) {
         // 10
         score -= 10;
-        outputString = giveSuggestion(`Image formats like WebP and AVIF often provide better compression than PNG or JPEG, which means faster downloads and less data consumption.%`, outputString);
+        outputString = giveSuggestion(`Please use image formats like WebP and AVIF as they often provide better compression than your format ${format}, which means faster downloads and less data consumption.%`, outputString);
         anyError = true;
     }
     if (hasOnlyWhitespaceContentOrNULL(altText)) {
@@ -83,7 +76,7 @@ async function checkImage(img, src, altText, outputString, score) {
     if (hasCrypticCode(src)) {
         // 10
         score -= 10;
-        outputString = giveSuggestion('Src link of the image shoulld be descriptive as it can help user understand what they can expect when they click on it%', outputString);// yellow
+        outputString = giveSuggestion('Src link of the image should be descriptive as it can help user understand what they can expect when they click on it%', outputString);// yellow
         anyError = true;
     }
     if (!isLazyLoadEnable(img)) {
@@ -97,7 +90,7 @@ async function checkImage(img, src, altText, outputString, score) {
     // console.log(score);
     return { string: outputString, src: score };
 }
-function checkImageSrc(imageUrl) {
+function checkImageSrc(imageUrl: string) {
     return new Promise((resolve) => {
         const image = new Image();
         image.onload = () => {
@@ -111,13 +104,23 @@ function checkImageSrc(imageUrl) {
         image.src = imageUrl;
     });
 };
-function isLazyLoadEnable(img) {
+function isLazyLoadEnable(img: Element) {
     const attributeValue = img.getAttribute('loading');
     if (attributeValue === null) return false;
     if (attributeValue != 'lazy') return false;
     return true;
 }
-async function checkImageCompression(imageUrl) {
+async function checkImageCompression(imageUrl: any) {
+    interface ObjReturn {
+        isCompressed: boolean;
+        compressSize: number;
+        originalSize: number;
+    }
+    let objReturn: ObjReturn = {
+        isCompressed: false,
+        compressSize: 0,
+        originalSize: 0,
+    };
     try {
         const format = imageUrl.split('.').pop().toLowerCase();
         const response = await fetch(imageUrl);
@@ -128,42 +131,44 @@ async function checkImageCompression(imageUrl) {
             maxSizeMB: 1, // Set the maximum file size limit for compression in megabytes
             useWebWorker: true // Enable web worker for faster compression (optional)
         };
-        const compressedFile = await imageCompression(file,options);
+        const compressedFile = await imageCompression(file, options);
         const isCompressed = compressedFile.size < file.size;
-        if(isCompressed){
+        if (isCompressed) {
             console.log('Image can be further compressed.');
             console.log(compressedFile.size);
             console.log(file.size);
-            return {isCompressed : isCompressed , compressSize: compressedFile.size, originalSize: file.size };
+            objReturn.isCompressed = isCompressed;
+            objReturn.compressSize = compressedFile.size;
+            objReturn.originalSize = file.size;
+            return objReturn;
         }
         else {
-            return false;
+            return objReturn;
         }
     } catch (error) {
         console.error('Error occurred while fetching the image:', error);
         return false;
     }
 }
-function hasCrypticCode(src) {
+function hasCrypticCode(src: string) {
     const crypticCodeRegex = /[^\w\d\-_]/; // Regular expression to match any character that is not a word character, digit, hyphen, or underscore
     return crypticCodeRegex.test(src);
 }
-function getImageFormatFromURL(url) {
-    const extension = url.split('.').pop().toLowerCase();
+function getImageFormatFromURL(url: string) {
+    const extension = url.split('.').pop()?.toLowerCase() ?? '';
     const formatMatch = url.match(/^data:image\/(\w+);base64,/);
-    if(!formatMatch)return extension;
+    if (!formatMatch) return extension;
     return formatMatch[1];
 }
-function hasOnlyWhitespaceContentOrNULL(element) {
-    if(element === undefined)return true;
-    if (element === null ) return true;
+function hasOnlyWhitespaceContentOrNULL(element: string) {
+    if (element === undefined) return true;
+    if (element === null) return true;
     const whitespaceRegex = /^\s*$/;
     // Remove leading and trailing whitespace from the element's content
     const content = element.trim();// check by using length on trim
     return whitespaceRegex.test(content);
 }
-function giveSuggestion(text, outputString) {
-
+function giveSuggestion(text: string, outputString: string) {
     outputString = `${outputString}${text}`;
     return outputString;
 }

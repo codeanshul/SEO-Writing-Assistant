@@ -1,4 +1,4 @@
-import React, { useState, useEffect, contentRef } from 'react';
+import React, { useState , FC , ReactNode} from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import './accordian.css'
@@ -7,16 +7,24 @@ import styleImageString from '../utils/styleImageString';
 import styleSemanticString from '../utils/styleSemanticString';
 import styleLinkString from '../utils/styleLinkString';
 import styleTextString from '../utils/styleTextString';
-const Accordion = ({ data }) => {
+interface Data{
+    title : string;
+    content : string;
+    score : number;
+}
+interface Props{
+    data : Data;
+}
+const Accordion : FC<Props> = ({ data }) => {
 
     const [isOpen, setIsOpen] = useState(false);
     const toggleAccordion = () => {
         setIsOpen(!isOpen);
     };
-    let styledStrings;
+    let styledStrings : ReactNode[] = [];
     const suggestionType = data.title;
     if (suggestionType.includes('Headers')) styledStrings = styleHeaderString(data.content);
-    if (suggestionType.includes('Images'))styledStrings = styleImageString(data.content);
+    else if (suggestionType.includes('Images'))styledStrings = styleImageString(data.content);
     else if(suggestionType.includes('Semantic'))styledStrings = styleSemanticString(data.content);
     else if(suggestionType.includes('Links'))styledStrings = styleLinkString(data.content);
     else if(suggestionType.includes('Text'))styledStrings = styleTextString(data.content);

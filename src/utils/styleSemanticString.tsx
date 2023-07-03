@@ -1,10 +1,11 @@
+import React , {ReactNode} from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationTriangle, faExclamationCircle, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
-export default function styleSemanticString(semanticData) {
+export default function styleSemanticString(semanticData : string) {
     const parts = semanticData.split("%");
-    let listArray = [];
-    let listHeading = '';
-    let outputArray = [];
+    let listArray : ReactNode[] = [];
+    let listHeading : string = '';
+    let outputArray : ReactNode[] = [];
     parts.map((str, index) => {
 
         switch (true) {
@@ -88,10 +89,10 @@ export default function styleSemanticString(semanticData) {
     listArray = [];
     return outputArray;
 }
-function insertLists(listArray, outputArray, listHeading) {
+function insertLists(listArray : ReactNode[], outputArray : ReactNode[], listHeading : string) {
     if (listArray.length === 0) return outputArray;
     switch(true){
-        case listHeading.includes('Empty'):
+        case listHeading.includes('Empty'): 
             outputArray.push(<ul> <p className='big-header-warning'>{listHeading}</p>{
                 listArray.map((str) => {
                     return str;

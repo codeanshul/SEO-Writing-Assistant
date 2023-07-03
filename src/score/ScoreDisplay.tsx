@@ -1,7 +1,11 @@
-import React from 'react'
+import React , {FC} from 'react'
 import './scoreDisplay.css'
 
-const ScoreDisplay = ({ score }) => {
+interface Props{
+  score : number;
+  children : string;
+}
+const ScoreDisplay: FC<Props> = ({ score }) => {
   let backgroundColorScore;
   if (score <= 40) backgroundColorScore = 'red';
   else if (score <= 80) backgroundColorScore = 'yellow';

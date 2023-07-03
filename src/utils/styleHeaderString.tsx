@@ -1,10 +1,11 @@
+import React , { ReactNode } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationTriangle, faExclamationCircle, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
-export default function styleHeaderString(headerData) {
+export default function styleHeaderString(headerData : string) {
     const parts = headerData.split("%");
-    let outputArray = [];
-    let listArray = [];
-    let listHeading;
+    let outputArray : ReactNode[] = [];
+    let listArray : ReactNode[]= [];
+    let listHeading : string = '';
     parts.map((str, index) => {
         switch(true){
             case str.includes('No header tags'):
@@ -56,7 +57,7 @@ export default function styleHeaderString(headerData) {
     outputArray = insertLists(listArray,outputArray,listHeading);
     return outputArray;
 }
-function insertLists(listArray,outputArray,listHeading) {
+function insertLists(listArray : ReactNode[],outputArray : ReactNode[] ,listHeading : string) {
     if (listArray.length === 0)return outputArray;
     if(!listHeading)
     {

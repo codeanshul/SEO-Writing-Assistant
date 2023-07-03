@@ -1,15 +1,16 @@
-import getInnerText from "./getInnerText";
+import getInnerText from "./getInnerText.tsx";
 // Readability check scores : If very low then report
 // Calculate %of keywords in the text content if in between 5 to 20 then okay else report
 // check for long tail keywords . If keywords array has no long tail keywords then report or can check for 10% of keyarray
-export default function checkBodyTextContent(htmlInput, keyArray, readText) {
+export default function checkBodyTextContent(htmlInput : HTMLElement, keyArray : string[], readText : string) {
     // const textAnalysis = document.getElementById(`Text`);
     let objReturn = {
         title: 'Text Content',
         content: 'No content given',
         score: 0,
     }
-    if (htmlInput === '') return objReturn;
+    if (!htmlInput) return objReturn;
+    if(htmlInput && htmlInput.innerHTML.trim() === '')return objReturn;
     else if (keyArray === null) {
         objReturn.content = 'No keywords given';
         return objReturn;
@@ -56,7 +57,7 @@ export default function checkBodyTextContent(htmlInput, keyArray, readText) {
     // console.log(score);
     return objReturn;
 }
-function calculateFleschKincaid(text) {
+function calculateFleschKincaid(text : string) {
     // Remove punctuation and convert to lowercase
     const cleanedText = text.replace(/[^\w\s]/g, "").toLowerCase();
     // Count the number of words and sentences
@@ -65,8 +66,9 @@ function calculateFleschKincaid(text) {
     const wordsPerSentence = wordsBody.length / sentencesBodyCnt;
     // Calculate the average number of syllables per word
     let syllableCount = 0;
-    wordsBody.forEach((word) => {
-        syllableCount += countSyllables(word);
+    wordsBody.forEach((word : string) => {
+        let wordSyllableCount = countSyllables(word);
+        syllableCount += wordSyllableCount ?? 0;
     });
     // console.log(syllableCount);
     const syllablesPerWord = syllableCount / wordsBody.length;
@@ -89,7 +91,7 @@ function calculateFleschKincaid(text) {
     }
     return {string : readabilityString, scr : score};
 }
-function countSentences(text) {
+function countSentences(text  : string) {
     const stop = /[.!?]/;
     const sentences = text.split(stop);
     let sentenceCount = 0;
@@ -100,15 +102,15 @@ function countSentences(text) {
     }
     return sentenceCount;
 }
-function countSyllables(word) {
+function countSyllables(word : string) {
     word = word.toLowerCase();
     if (word.length <= 3) return 1;
     word = word.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, "");
     word = word.replace(/^y/, "");
     if (word.match(/[aeiouy]{1,2}/g) === null) return 0;
-    else return word.match(/[aeiouy]{1,2}/g).length;
+    else return word.match(/[aeiouy]{1,2}/g)?.length;
 }
-function giveSuggestion(text, outputString) {
+function giveSuggestion(text : string, outputString : string) {
 
     outputString = `${outputString}${text}`;
     return outputString;

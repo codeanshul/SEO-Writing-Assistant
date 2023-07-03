@@ -1,14 +1,17 @@
 // let str ;
-import getInnerText from "./getInnerText";
-export default function checkHeaders(htmlInput, keyArray) {
+import getInnerText from "./getInnerText.tsx"
+export default function checkHeaders(htmlInput : HTMLElement, keyArray : string[]) {
+    // console.log(htmlInput);
     let objReturn = {
         title: 'Headers',
-        content: "No content given",
-        score : 0,
-    }
-    if (htmlInput === '' || keyArray === null) return objReturn;
+        content: 'No content given',
+        score: 0,
+    };
+    if(!htmlInput || keyArray === null)return objReturn;
+    if(htmlInput && htmlInput.innerHTML.trim() === '')return objReturn;
     let outputString = '';
-    let headerTags = htmlInput.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    let headerTags = Array.from(htmlInput.querySelectorAll('h1, h2, h3, h4, h5, h6'));
+    // console.log(headerTags);
     const tempObj = filtertags(headerTags,outputString);
     headerTags = tempObj.headerTags// will remove all the header tags which do not have any content in it
     outputString = tempObj.outputString;
@@ -47,13 +50,17 @@ export default function checkHeaders(htmlInput, keyArray) {
     objReturn.score = score*0.2;
     return objReturn;
 }
-function filtertags(headerTags,outputString) {
+function filtertags(headerTags : Element[],outputString : string) {
 
-    let tempObj = {
+    interface TempObj{
+        headerTags : Element[];
+        outputString : string;
+    }
+    let tempObj : TempObj = {
         headerTags : [],
         outputString : '',
     };
-    let contenttags = [];
+    let contenttags : Element[] = [];
     for (let i = 0; i < headerTags.length; i++) {
         const tag = headerTags[i].tagName;
         const headerText = getInnerText(headerTags[i].innerHTML).replace(/\s+/g, ' ').trim();
@@ -61,6 +68,7 @@ function filtertags(headerTags,outputString) {
             console.log("Empty Header tag");
         }
         else {
+
             contenttags.push(headerTags[i]);
         }
     }
@@ -68,8 +76,9 @@ function filtertags(headerTags,outputString) {
     tempObj.outputString = outputString;
     return tempObj;
 }
-function countH1Tags(headerTags,outputString,score) {
-    let cnth1 = 0;
+function countH1Tags(headerTags : Element[],outputString : string,score : number) {
+
+    let cnth1 : number = 0;
     for (let tag of headerTags) {
         if (parseInt(tag.tagName.charAt(1)) == 1) {
             cnth1++;
@@ -82,9 +91,11 @@ function countH1Tags(headerTags,outputString,score) {
     }
     return {string : outputString , scr : score};
 }
-function checkForKeywordsHeading(firstHeaderTag, keyArray,outputString,score) {
-    const Heading = firstHeaderTag.childNodes[0].textContent.trim();
-    let currentScore = 0
+function checkForKeywordsHeading(firstHeaderTag : Element, keyArray : string[],outputString : string,score : number) {
+
+    if(firstHeaderTag === null)return {string : outputString , scr : score};
+    const Heading = firstHeaderTag.childNodes[0]?.textContent?.trim() ?? "";
+    let currentScore : number = 0
     if (Heading.length > 60) {
         // 10
         currentScore += 10;
@@ -92,7 +103,7 @@ function checkForKeywordsHeading(firstHeaderTag, keyArray,outputString,score) {
     }
     // checking for count of keywords in the array 
     const headingArray = Heading.replace(/\s+/g, ' ').trim().toLowerCase().split(' ');
-    let anyKeywordHeading = false;
+    let anyKeywordHeading : boolean= false;
     keyArray.forEach((element) => {
         if (headingArray.includes(element)) anyKeywordHeading = true;
     });
@@ -104,7 +115,7 @@ function checkForKeywordsHeading(firstHeaderTag, keyArray,outputString,score) {
     score -= currentScore;
     return {string : outputString , scr : score}
 }
-function checkForHeirarchy(headerTags,outputString,score) {
+function checkForHeirarchy(headerTags : Element[],outputString : string,score : number) {
     // console.log('anshul');
     let countHeader = [1, 0, 0, 0, 0, 0, 0];
     let currentScore = 0;
@@ -138,15 +149,15 @@ function checkForHeirarchy(headerTags,outputString,score) {
     score -= Math.min(25,currentScore);
     return {string : outputString,scr : score};
 }
-function giveSuggestion(text,outputHtmlString) {
+function giveSuggestion(text : string,outputHtmlString : string) {
     outputHtmlString = `${outputHtmlString}${text}`;
     return outputHtmlString;
 }
-function hasOnlyWhitespaceContent(element) {
+function hasOnlyWhitespaceContent(element : Element) {
     if(element == null)return true;
     const whitespaceRegex = /^\s*$/;
     // Remove leading and trailing whitespace from the element's content
-    const content = element.textContent.trim();// check by using length on trim
+    const content = element.textContent?.trim() ?? "";// check by using length on trim
     return whitespaceRegex.test(content);
 }
 // export { checkBodyTextContent };

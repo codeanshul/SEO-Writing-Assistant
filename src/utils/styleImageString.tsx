@@ -1,12 +1,13 @@
+import React , { ReactNode } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationTriangle, faExclamationCircle, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
-export default function styleImageString(imageData) {
+export default function styleImageString(imageData : string) {
     const parts = imageData.split("%");
-    let outputArray = [];
-    let listArray = [];
-    let listHeading;
+    let outputArray : ReactNode[] = [];
+    let listArray : ReactNode[] = [];
+    let listHeading : string = "";
     let hrefCompressionFormat = "https://developers.google.com/speed/webp#:~:text=WebP%20is%20a%20modern%20image,in%20size%20compared%20to%20PNGs.";
-    parts.map((str, index) => {
+    parts.map((str : string , index : number) => {
         switch(true){
             case str.includes('No images in the article , Please add some relevant image so that results can become much more useful.'):
                 outputArray.push(<p className='big-header-warning'><li><FontAwesomeIcon className = 'icon-high-warning'icon={faExclamationTriangle}/>{str}</li></p>);
@@ -25,7 +26,7 @@ export default function styleImageString(imageData) {
             case str.includes("Google Images supports images in the following formats: BMP, GIF, JPEG, PNG, WebP, and SVG"):
                 listArray.push(<li><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</li>);
                 break;
-            case str.includes("Image formats like WebP and AVIF often provide better"):
+            case str.includes("Please use image formats like WebP and AVIF"):
                 listArray.push(<><li><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</li></>);
                 break;
             case str.includes("Image can be further compressed"):
@@ -37,7 +38,7 @@ export default function styleImageString(imageData) {
             case str.includes("Please make the loading attribute of this image as lazy for better loading time of the page"):
                 listArray.push(<li><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</li>);
                 break;
-            case str.includes("Src link of the image shoulld be descriptive as it can help user"):
+            case str.includes("Src link of the image should be descriptive as it can help user"):
                 listArray.push(<li><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</li>)
                 break;
             case str.includes("Image has all required attributes for a good SEO recommended page"):
@@ -53,7 +54,7 @@ export default function styleImageString(imageData) {
     if (listArray.length)listArray = [];
     return outputArray;
 }
-function insertLists(listArray, outputArray, listHeading) {
+function insertLists(listArray : ReactNode[], outputArray : ReactNode[], listHeading : string) {
     if (listArray.length === 0) return outputArray;
     const linkDetails = listHeading.slice(25,listHeading.length);
     const listHeadingText = listHeading.slice(0,25);
