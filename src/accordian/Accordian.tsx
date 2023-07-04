@@ -14,14 +14,21 @@ interface Data{
 }
 interface Props{
     data : Data;
+    allotedScore : number;
+
 }
-const Accordion : FC<Props> = ({ data }) => {
+const Accordion : FC<Props> = ({ data , allotedScore}) => {
 
     const [isOpen, setIsOpen] = useState(false);
     const toggleAccordion = () => {
         setIsOpen(!isOpen);
     };
     let styledStrings : ReactNode[] = [];
+    let bgColor : string;
+    let percentage = (data.score/allotedScore)*100;
+    if(percentage>=80)bgColor = 'green';
+    else if(percentage >= 40)bgColor = 'yellow';
+    else bgColor = 'red';
     const suggestionType = data.title;
     if (suggestionType.includes('Headers')) styledStrings = styleHeaderString(data.content);
     else if (suggestionType.includes('Images'))styledStrings = styleImageString(data.content);
@@ -39,9 +46,10 @@ const Accordion : FC<Props> = ({ data }) => {
                     className="accordian-arrow"
                     style={{transform : `rotate(${rotation})`}}
                 />
-                <span className='accordian-title'>
+                <section className='accordian-title'>
                     <h3>{suggestionType}</h3>
-                </span>
+                    <div className='individualScore' style={{backgroundColor : bgColor}}>{data.score.toFixed(0)}/{allotedScore}</div>
+                </section>
             </div>
             {
                 isOpen &&

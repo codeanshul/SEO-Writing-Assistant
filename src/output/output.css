@@ -1,10 +1,10 @@
 .output {
     flex: 0.8;
-    margin: 5px;
+    margin: 5px 30px 5px 15px;
     padding-right: 10px;
     padding-top: 10px;
     padding-bottom: 10px;
-    height: 92vh;
+    height: 90vh;
     width: 50vw;
     align-items: center;
     border: 2px solid black;

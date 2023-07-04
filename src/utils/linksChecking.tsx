@@ -1,17 +1,19 @@
+
 export default async function checkLinks(htmlInput: HTMLElement, keyArray: string[]) {
     // console.log(keyArray);
     let objReturn = {
         title: `Int/Ext Links`,
         content: "No content given",
-        score: 0,
+        score: 0
     }
     let outputString = '';
     if (htmlInput && htmlInput.innerHTML.trim() === '') return objReturn;
     if (htmlInput && htmlInput.innerHTML.trim() === '') return objReturn;
     const allLinks = htmlInput.getElementsByTagName('a');
     if (allLinks.length == 0) {
-        outputString = giveSuggestion("No Links in the content%", outputString);
+        outputString = giveSuggestion("No Links in the content , can add some relevant links for better indexing and visibilty.%", outputString);
         objReturn.content = outputString;
+        objReturn.score = 15;
         return objReturn;
     }
     let internalLinks: HTMLAnchorElement[] = [];
@@ -34,7 +36,7 @@ export default async function checkLinks(htmlInput: HTMLElement, keyArray: strin
     const internalLinksScore = internalCheckObj.scr;
     objReturn.content = outputString;
     // weightage of internal link is given half of the weightage of external link , and if their is no external link , then also we'll deduct some score out of it.
-    const totalScore = ((externalLinkScore + internalLinksScore) / (Math.max(externalLinks.length * 100, 100) + Math.max(internalLinks.length * 50, 50))) * 100 * 0.15;
+    const totalScore = ((externalLinkScore + internalLinksScore) / (externalLinks.length * 100 + internalLinks.length * 50)) * 100 * 0.15;
     objReturn.score = totalScore;
     return objReturn;
 
@@ -54,12 +56,11 @@ async function externalLinksCheck(externalLinks: HTMLAnchorElement[], keyArray: 
         let response = await isLinkCrawlable(link.href);
         if (link.text.trim() == "") {// If no anchor text
             // 40
-            score -= 35;
+            score -= 37;
             outputString = giveSuggestion(`Add anchor text to your link to give more imformation about the link to the user before clicking it.%`, outputString);// red li
             anyError = true;
         }
-        else // check for keywords inside link
-        {
+        else {// check for keywords inside link
             const anchorText = link.text.trim();
             const anchorSplit = anchorText.split(' ');
             for (let word of anchorSplit) {
@@ -74,7 +75,7 @@ async function externalLinksCheck(externalLinks: HTMLAnchorElement[], keyArray: 
             outputString = giveSuggestion(`Add a rel attribute as nofollow in the link , as search engines shouldn’t follow these links authority to the link target.%`, outputString);// yellow li
         }
         if(!response){
-            score -= 25;
+            score -= 28;
             outputString = giveSuggestion(`This Link is not crawlable , Search engines may use href attributes on links to crawl websites. Ensure that the href attribute of anchor elements links to an appropriate destination, so more pages of the site can be discovered.%`,outputString);
         }
         if (!anyError) {
@@ -83,8 +84,8 @@ async function externalLinksCheck(externalLinks: HTMLAnchorElement[], keyArray: 
     }
     if (!anyKeyword) {
         // 30
-        score -= 15 * externalLinks.length;
-        outputString = giveSuggestion(`Please add some keyword in the text of the internal links as it can help search engine understand the relevance of the page also it can influence CTR , user experience.%`, outputString);// yellow h4
+        score -= 10 * externalLinks.length;
+        outputString = giveSuggestion(`Please add some keyword in the text of the external links as it can help search engine understand the relevance of the page also it can influence CTR , user experience.%`, outputString);// yellow h4
     }
     return { string: outputString, scr: score };
 }
@@ -127,13 +128,20 @@ async function internalLinksCheck(internalLinks: HTMLAnchorElement[], keyArray: 
     return { string: outputString, scr: score };
 }
 async function isLinkCrawlable(url: string) {
+    // doubt giving cross origin response error
+    // let urlCons = new URL('https://www.sprinklr.com/help/');
     try {
-        const response = await fetch(url);
-        return response.ok;
+        // window.open(url);
+        new URL(url);
+        return true;
+        // const response = await fetch(url);
+        // console.log(response.status);
+        // return response.status === 200;
+        return true;
     } catch (error) {
-        return false;
+        console.log('hello');
+        return 
         console.error('Error occurred while checking the link:', error);
-       
     }
 }
 function giveSuggestion(text: string, outputString: string) {

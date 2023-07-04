@@ -33,7 +33,7 @@ export default async function checkOptimizedImagesWithAlt(htmlInput: HTMLElement
         }
         if (itemProcessed == images.length) {
             objReturn.content = outputString;
-            objReturn.score = (totImagesScore / images.length) * 0.25;
+            objReturn.score = (totImagesScore / images.length) * 0.30;
             return objReturn;
         }
     }
@@ -50,14 +50,16 @@ async function checkImage(img: Element, src: string, altText: string, outputStri
     const data = await checkImageCompression(src);
     const dataImageCompress = data && data.isCompressed;
     if (dataImageCompress) {
-        score -= 20; 
-        outputString = giveSuggestion(`Image can be further compressed , Actual Image size : ${data.originalSize} KB Compressed Image Size : ${data.compressSize} KB%`, outputString);// yellow
+        let totalCompress = data.originalSize - data.compressSize;
+        let precentageCompress = totalCompress/data.originalSize;
+        score -= 20*precentageCompress;
+        outputString = giveSuggestion(`Image can be further compressed , Potential savings upto : ${data.originalSize - data.compressSize} KB.%`, outputString);// yellow
         anyError = true;
     }
     if (!possibleExtension.includes(format)) {
         // 20
         score -= 20;
-        outputString = giveSuggestion(`Google Images supports images in the following formats: BMP, GIF, JPEG, PNG, WebP, and SVG but your format is ${format}%`, outputString);// yellow
+        outputString = giveSuggestion(`Google Images supports images in the following formats: BMP, GIF, JPEG, PNG, WebP, and SVG but your format is ${format}.%`, outputString);// yellow
         anyError = true;
     }
     if ((format == 'png' || format == 'jpeg')) {
@@ -69,23 +71,22 @@ async function checkImage(img: Element, src: string, altText: string, outputStri
     if (hasOnlyWhitespaceContentOrNULL(altText)) {
         // 30
         score -= 30;
-        console.log('anshul');
-        outputString = giveSuggestion(`Add alt attribute for the image as it helps crawler to better understand what the image is about%`, outputString);// yellow
+        outputString = giveSuggestion(`Add alt attribute for the image as it helps crawler to better understand what the image is about.%`, outputString);// yellow
         anyError = true;
     }
-    if (hasCrypticCode(src)) {
+    if (!isSecure(src)) {
         // 10
         score -= 10;
-        outputString = giveSuggestion('Src link of the image should be descriptive as it can help user understand what they can expect when they click on it%', outputString);// yellow
+        outputString = giveSuggestion('Src link of the image is not secured with https protocol.%', outputString);// yellow
         anyError = true;
     }
     if (!isLazyLoadEnable(img)) {
         // 10
         score -= 10;
-        outputString = giveSuggestion(`Please make the loading attribute of this image as lazy for better loading time of the page%`, outputString);// yellow
+        outputString = giveSuggestion(`Please make the loading attribute of this image as lazy for better loading time of the page.%`, outputString);// yellow
     }
     if (!anyError) {
-        outputString = giveSuggestion(`Image has all required attributes for a good SEO recommended page%`, outputString);// green
+        outputString = giveSuggestion(`Image has all required attributes for a good SEO recommended page.%`, outputString);// green
     }
     // console.log(score);
     return { string: outputString, src: score };
@@ -133,6 +134,7 @@ async function checkImageCompression(imageUrl: any) {
         };
         const compressedFile = await imageCompression(file, options);
         const isCompressed = compressedFile.size < file.size;
+        // console.log(compressedFile.size,file.size);
         if (isCompressed) {
             console.log('Image can be further compressed.');
             console.log(compressedFile.size);
@@ -150,14 +152,19 @@ async function checkImageCompression(imageUrl: any) {
         return false;
     }
 }
-function hasCrypticCode(src: string) {
-    const crypticCodeRegex = /[^\w\d\-_]/; // Regular expression to match any character that is not a word character, digit, hyphen, or underscore
-    return crypticCodeRegex.test(src);
+function isSecure(src: string) {
+    if(src.startsWith('/'))return true;
+    const url = new URL(src);
+    return url.protocol.startsWith('http');
 }
 function getImageFormatFromURL(url: string) {
+    const possibleExtension = ['bmp', 'gif', 'jpeg', 'png', 'webp', 'svg','avif','jpg'];
     const extension = url.split('.').pop()?.toLowerCase() ?? '';
     const formatMatch = url.match(/^data:image\/(\w+);base64,/);
-    if (!formatMatch) return extension;
+    if (!formatMatch){
+        if(!possibleExtension.includes(extension))return 'Unknown Format';
+        return extension;
+    }
     return formatMatch[1];
 }
 function hasOnlyWhitespaceContentOrNULL(element: string) {
@@ -172,16 +179,3 @@ function giveSuggestion(text: string, outputString: string) {
     outputString = `${outputString}${text}`;
     return outputString;
 }
-// alt text check - done
-// check for number of images -> Done
-// check the size of the image for better loading of page - Done
-// Also we can check for recommmend format of the images . Google advices to use these image format - Done 
-// Can check for aspect ratio of the image (height to width ratio that should be 1:1 mostly)
-// Also include a check for PPI(Pixels per inch) . Ideally it should be 72 . If less than it then report. Generally for printable images
-// Descriptive src link for better recognition of your page by crawler - Done
-
-
-//git branch -M main
-// git remote add origin https://github.com/codeanshul/SEO-Checker-Tool.git
-// git push -u origin main
-

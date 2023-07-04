@@ -1,6 +1,8 @@
 .container-fluid{
     background-color: rgba(68, 68, 68, 0.15);
-    margin-top: 0px;
+    margin-top: -7px;
+    height: 55px;
+    
 }
 .navbar-light bg-light{
     margin-top: 0px;

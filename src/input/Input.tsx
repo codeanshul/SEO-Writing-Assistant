@@ -10,7 +10,7 @@ interface Props{
 }
 const Input : FC<Props> = ({handleButtonClick,handleInputChangeHTML,handleInputChangeKey,text,keyword}) => {
   return (
-        <div className='input'>
+        <article className='input'>
                 <h2> <u>HTML Input </u></h2>
                 <textarea
                     className='htmlinput'
@@ -30,9 +30,9 @@ const Input : FC<Props> = ({handleButtonClick,handleInputChangeHTML,handleInputC
                     onClick={handleButtonClick}
                     className='button'
                 >
-                Get Recommendations
+                Submit
                 </button>
-        </div>
+        </article>
   )
 }
 

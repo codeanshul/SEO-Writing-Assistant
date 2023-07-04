@@ -11,15 +11,17 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 8px auto;
+  margin: 1px auto;
   box-shadow: 4px 4px 6px rgba(68, 68, 68, 0.2);
   margin: '10px';
 }
 
 .score {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: bold;
   color: #333;
+  align-items: center;
+  text-align: center;
 }
 
 @media (max-width: 767px) {

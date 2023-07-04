@@ -8,6 +8,9 @@ export default function styleTextString(textcheckData : string) {
     let hrefLongTailKeyword = "https://yoast.com/focus-on-long-tail-keywords/#:~:text=It's%20much%20easier%20to%20rank,to%20rank%20for%20the%20term.";
     parts.map((str, index) => {
         switch(true){
+            case str.includes('No keywords given'):
+                outputArray.push(<p className='big-header-warning'><FontAwesomeIcon className = 'icon-high-warning'icon={faExclamationTriangle}/>{str}</p>);
+                break;
             case str.includes('Try to use some long-tail keywords') : 
                 outputArray.push(<p className='big-header-warning'><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}<a href = {hrefLongTailKeyword} style={{display : 'inline',fontSize : '17px',margin : '4px'}}>More about Long Tail Keywords</a></p>);
                 break;

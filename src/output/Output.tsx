@@ -15,41 +15,40 @@ interface Props{
 }
 const Output : FC<Props> = ({ htmlInput, keyArray, readText }) => {
 
-    const headerData = checkHeaders(htmlInput, keyArray);// 20
+    const headerData = checkHeaders(htmlInput, keyArray);// 15
     const semanticData = checkSemanticTags(htmlInput);// 25
     const textcheckData = checkBodyTextContent(htmlInput, keyArray, readText);// 15
     const [totalScore, setTotalScore] = useState(0);
-    const [imageData, setImageData] = useState({ title: 'Image', content: 'Loading Page....', score: 0 });
-    const [linkData, setLinkData] = useState({title : 'Int/Ext Links' , content : 'Loading Page ...',score : 0});
+    const [imageData, setImageData] = useState({ title: 'Image', content: 'Loading Page....', score: 0 });// 30
+    const [linkData, setLinkData] = useState({title : 'Internal/External Links' , content : 'Loading Page ...',score : 0});// 15
     useEffect(() => {
 
         const fetchData = async () => {
-            const imageData = await checkOptimizedImagesWithAlt(htmlInput);// 30
-            const linkData = await checkLinks(htmlInput, keyArray); // 10
+            const imageData = await checkOptimizedImagesWithAlt(htmlInput);
+            const linkData = await checkLinks(htmlInput, keyArray); 
             const curr = headerData.score + imageData.score + semanticData.score + linkData.score + textcheckData.score;
-            // console.log(headerData.score,response.score,semanticData.score,linkData.score,textcheckData.score);
+            console.log(headerData.score,imageData.score,semanticData.score,linkData.score,textcheckData.score);
             setTotalScore(curr);
             setImageData(imageData);
             setLinkData(linkData);
         }
         fetchData();
     }, [htmlInput])
-
     return (
         
-        <div className='output' id="displaying">
-            <h3 className='get-recommendation'><u>Recommendation to Improve SEO</u></h3>
+        <article className='output' id="displaying">
+            <h2 className='get-recommendation'><u>Recommendations to Improve SEO</u></h2>
             {
                 <div className="Sections">
-                    <ScoreDisplay score={totalScore}> </ScoreDisplay>
-                    <Accordion data={headerData} />
-                    <Accordion data={imageData} />
-                    <Accordion data={semanticData} />
-                    <Accordion data={linkData} />
-                    <Accordion data={textcheckData} />
+                    <ScoreDisplay score={totalScore} htmlInput = {htmlInput}> </ScoreDisplay>
+                    <Accordion data={headerData} allotedScore = {15}/>
+                    <Accordion data={imageData} allotedScore = {30}/>
+                    <Accordion data={semanticData} allotedScore = {25}/>
+                    <Accordion data={linkData} allotedScore = {15}/>
+                    <Accordion data={textcheckData} allotedScore = {15}/>
                 </div>
             }
-        </div>
+        </article>
     )
 }
 export default Output

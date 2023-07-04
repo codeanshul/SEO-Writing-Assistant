@@ -5,7 +5,7 @@ import './bodyContent.css'
 const BodyContent = () => {
     const ele = document.createElement('body');
     const [text, setText] = useState('');
-    const [keyword, setKeyword] = useState('lorem,ipsum');
+    const [keyword, setKeyword] = useState('');
     const [htmlContent, setHtmlContent] = useState<HTMLElement>(ele);
     const [keyArray, setKeyArray] = useState<string[]>([]);
     const handleInputChangeHTML = (event : ChangeEvent<HTMLTextAreaElement>) => {
@@ -16,7 +16,7 @@ const BodyContent = () => {
     };
     const handleButtonClick = () => {
 
-        fetch('input.html')
+        fetch('myPage.html')
             .then((res) => res.text())
             .then((res) => {
                 setText(res);
@@ -29,18 +29,22 @@ const BodyContent = () => {
             const arr = contents.split("</html>");
             const htmlInput = document.createElement('html');
             htmlInput.innerHTML = contents;
-            let keyArray = keyword.split(",");
-            keyArray.forEach((item) => item.trim());
+            let keyArray = keyword.replace(/\s+/g, ' ').trim().toLowerCase().split(',');
+            // console.log(keyArray);
+            // keyArray.map((item) => {
+            //     return item = item.replace(/\s+/g, ' ').trim().toLowerCase();
+            //     console.log(item);
+            // });
             setHtmlContent(htmlInput);
             setKeyArray(keyArray);
         }
     };
 
     return (
-        <div className='page'>
+        <main className='page'>
             <Input handleButtonClick={handleButtonClick} handleInputChangeHTML={handleInputChangeHTML} handleInputChangeKey={handleInputChangeKey} text={text} keyword={keyword}/>
             <Output htmlInput={htmlContent} keyArray={keyArray} readText={text} />
-        </div>
+        </main>
     );
 };
 export default BodyContent;

@@ -72,6 +72,9 @@ export default function styleSemanticString(semanticData : string) {
             case str.includes('More than 2 nested divs found for the parent div'):
                 listArray.push(<li><FontAwesomeIcon className='icon-low-warning' icon={faExclamationCircle} />{str}</li>);
                 break;
+            case str.includes('Less than 4 deep nesting of Div tags.'):
+                listArray.push(<li><FontAwesomeIcon className='icon-no-warning' icon={faCheckCircle} />{str}</li>);
+                break;
             case str.includes('Percentage of non semantic tags in the content is'):
                 outputArray = insertLists(listArray, outputArray, listHeading);
                 listArray = [];

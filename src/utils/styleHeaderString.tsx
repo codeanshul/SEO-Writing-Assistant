@@ -11,32 +11,32 @@ export default function styleHeaderString(headerData : string) {
             case str.includes('No header tags'):
                 outputArray = insertLists(listArray,outputArray,listHeading);
                 if(listArray.length)listArray = [];
-                outputArray.push(<p className='big-header-warning'><li><FontAwesomeIcon className = 'icon-high-warning'icon={faExclamationTriangle}/>{str}</li></p>);
+                outputArray.push(<p className='big-header-warning'><FontAwesomeIcon className = 'icon-high-warning'icon={faExclamationTriangle}/>{str}</p>);
                 break;
             case str.includes("It is advised to have content's first heading as h1"):
                 outputArray = insertLists(listArray,outputArray,listHeading);
                 if(listArray.length)listArray = [];
-                outputArray.push(<p className='big-header-warning'><li><FontAwesomeIcon className = 'icon-high-warning'icon={faExclamationTriangle}/>{str}</li></p>);
+                outputArray.push(<p className='big-header-warning'><FontAwesomeIcon className = 'icon-high-warning'icon={faExclamationTriangle}/>{str.slice(0,65)}<i>{str.slice(65,str.length)}</i></p>);
                 break;
             case str.includes("It is advised to have only 1 H1 tag in a page as having"):
                 outputArray = insertLists(listArray,outputArray,listHeading);
                 if(listArray.length)listArray = [];
-                outputArray.push(<p className='big-header-warning'><li><FontAwesomeIcon className = 'icon-high-warning'icon={faExclamationTriangle}/>{str}</li></p>);
+                outputArray.push(<p className='big-header-warning'><FontAwesomeIcon className = 'icon-high-warning'icon={faExclamationTriangle}/>{str}</p>);
                 break;
             case str.includes("Please try to reduce the length of your heading"):
                 outputArray = insertLists(listArray,outputArray,listHeading);
                 if(listArray.length)listArray = [];
-                outputArray.push(<p className='big-header-warning'><li><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</li></p>);
+                outputArray.push(<p className='big-header-warning'><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</p>);
                 break;
             case str.includes("Please try to enlarge the length of your heading"):
                 outputArray = insertLists(listArray,outputArray,listHeading);
                 if(listArray.length)listArray = [];
-                outputArray.push(<p className='big-header-warning'><li><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</li></p>);
+                outputArray.push(<p className='big-header-warning'><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</p>);
                 break;
             case str.includes("Please try to add some keywords in the heading because they help search"):
                 outputArray = insertLists(listArray,outputArray,listHeading);
                 if(listArray.length)listArray = [];
-                outputArray.push(<p className='big-header-warning'><li><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</li></p>);
+                outputArray.push(<p className='big-header-warning'><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</p>);
                 break;
             case str.includes("tag above this tag") :
                 listArray.push(<li><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</li>);
@@ -47,7 +47,7 @@ export default function styleHeaderString(headerData : string) {
                 listHeading = str;
                 break;
             case str.includes('All okay with the header tags'):
-                outputArray.push(<p className='big-header-warning'><li><FontAwesomeIcon className = 'icon-no-warning'icon={faCheckCircle}/>{str}</li></p>);
+                outputArray.push(<p className='big-header-warning'><FontAwesomeIcon className = 'icon-no-warning'icon={faCheckCircle}/>{str}</p>);
                 break;
             default :
                 // outputArray.push(<p className='big-header-warning'><li><FontAwesomeIcon className = 'icon-no-warning'icon={faCheckCircle}/>{str}</li></p>);
