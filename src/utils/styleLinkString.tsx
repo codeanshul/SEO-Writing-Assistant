@@ -40,10 +40,13 @@ export default function styleLinkString(linkData : string) {
             case str.includes('This Link is not crawlable '):
                 listArray.push(<li><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</li>);
                 break;
+            case str.includes('Href attribute of the link is not secured with http protocol.'):
+                listArray.push(<li><FontAwesomeIcon className = 'icon-high-warning'icon={faExclamationTriangle}/>{str}</li>);
+                break;
             case str.includes('All okay with this link'):
                 listArray.push(<li><FontAwesomeIcon className = 'icon-no-warning'icon={faCheckCircle}/>{str}</li>);
                 break;
-            case str.includes("Please add some keyword in the text of the"):
+            case str.includes("Please add some keyword in the text of"):
                 outputArray = insertLists(listArray,outputArray,listHeading);
                 if(listArray.length)listArray = [];
                 listHeading = str;
@@ -53,12 +56,6 @@ export default function styleLinkString(linkData : string) {
                 outputArray = insertLists(listArray,outputArray,listHeading);
                 if(listArray.length)listArray = [];
                 listHeading = str;
-                break;
-            case str.includes('Please add some keyword in the text of the internal links'):
-                outputArray = insertLists(listArray,outputArray,listHeading);
-                if(listArray.length)listArray = [];
-                listHeading = str;
-                outputArray.push(<p className='big-header-warning'><li><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</li></p>);
                 break;
             default : 
         }

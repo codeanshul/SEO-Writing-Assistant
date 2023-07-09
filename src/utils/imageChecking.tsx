@@ -3,7 +3,6 @@ export default async function checkOptimizedImagesWithAlt(htmlInput: HTMLElement
     let objReturn = {
         title: 'Images',
         content: "Loading Page....",
-        score: 0
     }
     if(htmlInput && htmlInput.innerHTML.trim() === '')return objReturn;
     let outputString : string = '';
@@ -14,7 +13,6 @@ export default async function checkOptimizedImagesWithAlt(htmlInput: HTMLElement
         return objReturn;
     }
     let itemProcessed : number = 0;
-    let totImagesScore = images.length * 100;
     for (let img of images) {
         let altText = img.getAttribute('alt');
         if (altText === null && altText == undefined) altText = '';
@@ -22,24 +20,21 @@ export default async function checkOptimizedImagesWithAlt(htmlInput: HTMLElement
         const isImageValid = await checkImageSrc(src);
         itemProcessed++;
         if (isImageValid) {
-            const checkImageObj = await checkImage(img, src, altText, outputString, totImagesScore);
+            const checkImageObj = await checkImage(img, src, altText, outputString);
             outputString = checkImageObj.string;
-            totImagesScore = checkImageObj.src;
         }
         else {
             console.log(`Not able to process this image ${src}`);
-            totImagesScore -= 100;
             outputString = giveSuggestion(`Not able to process this image ${src}%`, outputString);
         }
         if (itemProcessed == images.length) {
             objReturn.content = outputString;
-            objReturn.score = (totImagesScore / images.length) * 0.30;
             return objReturn;
         }
     }
     return objReturn;
 }
-async function checkImage(img: Element, src: string, altText: string, outputString: string, score: number) {
+async function checkImage(img: Element, src: string, altText: string, outputString: string) {
 
     let imageTitle: string = altText;
     if (hasOnlyWhitespaceContentOrNULL(altText)) imageTitle = 'IMG';
@@ -49,47 +44,40 @@ async function checkImage(img: Element, src: string, altText: string, outputStri
     let anyError = false;
     const data = await checkImageCompression(src);
     const dataImageCompress = data && data.isCompressed;
+    // image compression
     if (dataImageCompress) {
         let totalCompress = data.originalSize - data.compressSize;
-        let precentageCompress = totalCompress/data.originalSize;
-        score -= 20*precentageCompress;
-        outputString = giveSuggestion(`Image can be further compressed , Potential savings upto : ${data.originalSize - data.compressSize} KB.%`, outputString);// yellow
+        outputString = giveSuggestion(`Image can be further compressed , Potential savings upto : ${totalCompress} KB.%`, outputString);// yellow
         anyError = true;
     }
+    // format check
     if (!possibleExtension.includes(format)) {
-        // 20
-        score -= 20;
         outputString = giveSuggestion(`Google Images supports images in the following formats: BMP, GIF, JPEG, PNG, WebP, and SVG but your format is ${format}.%`, outputString);// yellow
         anyError = true;
     }
     if ((format == 'png' || format == 'jpeg')) {
-        // 10
-        score -= 10;
         outputString = giveSuggestion(`Please use image formats like WebP and AVIF as they often provide better compression than your format ${format}, which means faster downloads and less data consumption.%`, outputString);
         anyError = true;
     }
+    // alt text check
     if (hasOnlyWhitespaceContentOrNULL(altText)) {
-        // 30
-        score -= 30;
         outputString = giveSuggestion(`Add alt attribute for the image as it helps crawler to better understand what the image is about.%`, outputString);// yellow
         anyError = true;
     }
+    // src link secured with http protocol
     if (!isSecure(src)) {
-        // 10
-        score -= 10;
-        outputString = giveSuggestion('Src link of the image is not secured with https protocol.%', outputString);// yellow
+        outputString = giveSuggestion('Src link of the image is not secured with http protocol.%', outputString);// yellow
         anyError = true;
     }
+    // enable loading attribute as lazy 
     if (!isLazyLoadEnable(img)) {
-        // 10
-        score -= 10;
         outputString = giveSuggestion(`Please make the loading attribute of this image as lazy for better loading time of the page.%`, outputString);// yellow
     }
     if (!anyError) {
         outputString = giveSuggestion(`Image has all required attributes for a good SEO recommended page.%`, outputString);// green
     }
     // console.log(score);
-    return { string: outputString, src: score };
+    return { string: outputString};
 }
 function checkImageSrc(imageUrl: string) {
     return new Promise((resolve) => {
@@ -153,7 +141,7 @@ async function checkImageCompression(imageUrl: any) {
     }
 }
 function isSecure(src: string) {
-    if(src.startsWith('/'))return true;
+    if(src.startsWith('./'))return true;
     const url = new URL(src);
     return url.protocol.startsWith('http');
 }

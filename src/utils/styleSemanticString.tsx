@@ -69,7 +69,7 @@ export default function styleSemanticString(semanticData : string) {
                 if (listArray.length) listArray = [];
                 listHeading = str;
                 break;
-            case str.includes('More than 2 nested divs found for the parent div'):
+            case str.includes('More than 4 nested divs found for the parent div'):
                 listArray.push(<li><FontAwesomeIcon className='icon-low-warning' icon={faExclamationCircle} />{str}</li>);
                 break;
             case str.includes('Less than 4 deep nesting of Div tags.'):
@@ -78,12 +78,12 @@ export default function styleSemanticString(semanticData : string) {
             case str.includes('Percentage of non semantic tags in the content is'):
                 outputArray = insertLists(listArray, outputArray, listHeading);
                 listArray = [];
-                outputArray.push(<p className='big-header-warning'><li><FontAwesomeIcon className='icon-high-warning' icon={faExclamationTriangle} />{str}</li></p>);
+                outputArray.push(<p className='big-header-warning'><FontAwesomeIcon className='icon-high-warning' icon={faExclamationTriangle} />{str}</p>);
                 break;
             case str.includes('Its good that you have less percentage of non semantic tags in the content'):
                 outputArray = insertLists(listArray, outputArray, listHeading);
                 listArray = [];
-                outputArray.push(<p className='big-header-warning'><li><FontAwesomeIcon className='icon-no-warning' icon={faExclamationCircle} />{str}</li></p>);
+                outputArray.push(<p className='big-header-warning'><FontAwesomeIcon className='icon-no-warning' icon={faCheckCircle} />{str}</p>);
                 break;
             default:
         }

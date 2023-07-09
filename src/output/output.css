@@ -3,7 +3,7 @@
     margin: 5px 30px 5px 15px;
     padding-right: 10px;
     padding-top: 10px;
-    padding-bottom: 10px;
+    padding-bottom: 5px;
     height: 90vh;
     width: 50vw;
     align-items: center;
@@ -16,6 +16,7 @@
 }
 .get-recommendation{
     text-align: center;
+    align-items: center;
 }
 a{
     display: inline;

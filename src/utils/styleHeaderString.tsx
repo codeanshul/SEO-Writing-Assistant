@@ -38,10 +38,10 @@ export default function styleHeaderString(headerData : string) {
                 if(listArray.length)listArray = [];
                 outputArray.push(<p className='big-header-warning'><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</p>);
                 break;
-            case str.includes("tag above this tag") :
+            case str.includes("There should be atleast one") :
                 listArray.push(<li><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</li>);
                 break;
-            case str.includes("Heirarchy incosistency found for the header") :
+            case str.includes("Hierarchy incosistency found for the header") :
                 outputArray = insertLists(listArray,outputArray,listHeading);
                 if(listArray.length)listArray = [];
                 listHeading = str;

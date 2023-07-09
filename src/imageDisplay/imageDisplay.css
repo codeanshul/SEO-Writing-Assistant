@@ -1,0 +1,8 @@
+.imageCheckDisplay{
+    display: inline-block;
+    cursor : pointer;
+    border : 1px solid black;
+    margin-left: 10px;
+    width : 80px;
+    height : 45px;
+}

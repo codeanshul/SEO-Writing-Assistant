@@ -7,13 +7,11 @@ export default function checkBodyTextContent(htmlInput : HTMLElement, keyArray :
     let objReturn = {
         title: 'Text Content',
         content: 'No content given',
-        score: 0
     }
     if (!htmlInput) return objReturn;
     if(htmlInput && htmlInput.innerHTML.trim() === '')return objReturn;
     else if (keyArray.length === 1 && keyArray[0] === '') {
         objReturn.content = 'No keywords given';
-        objReturn.score = 15;
         return objReturn;
     }
     let outputString = '';
@@ -30,31 +28,20 @@ export default function checkBodyTextContent(htmlInput : HTMLElement, keyArray :
         let cntWords = keyword.trim().split(' ').length;
         if (cntWords > 1) cntLongtailKeyword++;
     }
-    // console.log(cntKeyword,totalWordsBody);
-    let score = 100;
     if (cntLongtailKeyword < 0.1*keyArray.length) {
-        // 25
-        score -= 25;
         outputString = giveSuggestion(`Try to use some long-tail keywords, which are more specific and less competitive than short-tail keywords...%`, outputString);// h4 yellow
     }
     if (totalWordsBody * 0.02 > cntKeyword) {
-        // 25
-        score -= 25;
         outputString = giveSuggestion(`Try to optimize your content for specific keywords as you increase the chances of appearing in the search engine results pages (SERPs) for those keywords..%`, outputString);// h4 yellow
     }
     if (totalWordsBody * 0.20 < cntKeyword) {
-        // 20
-        score -= 20;
         outputString = giveSuggestion(`Please try to reduce some keywords on your page as search engines can penalize pages for seeing it as manipulation for ranking...%`, outputString);// h4 yellow
     }
     const readabilityObject = calculateFleschKincaid(bodytextContent)
     const readabilityScore = readabilityObject.scr;
     const readabilityString = readabilityObject.string;
-    score -= 0.3*readabilityScore;
     outputString = giveSuggestion(`${readabilityString.slice(0,-1)},according to Flesch-Kincaid Readability test and its score is ${readabilityScore.toFixed(2)}.%`, outputString);
     objReturn.content = outputString;
-    objReturn.score = score*0.15;
-    // console.log(score);
     return objReturn;
 }
 function calculateFleschKincaid(text : string) {
@@ -89,7 +76,7 @@ function calculateFleschKincaid(text : string) {
             break;
         }
     }
-    return {string : readabilityString, scr : score};
+    return {string : readabilityString , scr : score};
 }
 function countSentences(text  : string) {
     const stop = /[.!?]/;
@@ -116,3 +103,7 @@ function giveSuggestion(text : string, outputString : string) {
     return outputString;
 }
 // export { checkBodyTextContent };
+
+
+
+

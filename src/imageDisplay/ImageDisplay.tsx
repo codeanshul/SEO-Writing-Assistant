@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react'
-
+import './imageDisplay.css'
 interface Props {
     src: string;
     altText: string;
@@ -15,12 +15,10 @@ const ImageDisplay: FC<Props> = ({ src, altText }) => {
 
     return (
         <img
+            className = 'imageCheckDisplay'
             src={src}
             alt={altText}
             onClick={handleClick}
-            width="80px"
-            height="40px"
-            style={{ display: 'inline-block' }}
         />
     );
 }

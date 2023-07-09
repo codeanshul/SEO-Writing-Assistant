@@ -16,7 +16,7 @@ const BodyContent = () => {
     };
     const handleButtonClick = () => {
 
-        fetch('myPage.html')
+        fetch('demo1.html')
             .then((res) => res.text())
             .then((res) => {
                 setText(res);
