@@ -21,7 +21,7 @@ export default function styleImageString(imageData : string) {
                 outputArray.push(<p className='big-header-warning'><FontAwesomeIcon className = 'icon-high-warning'icon={faExclamationTriangle}/>{str.slice(0,30)}<a href={str.slice(30,str.length)}>IMG</a></p>);
                 break;
             case str.includes("Add alt attribute for the image as it helps crawler to better understand what the image is about"):
-                listArray.push(<li><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</li>);
+                listArray.push(<li><FontAwesomeIcon className = 'icon-high-warning'icon={faExclamationTriangle}/>{str}</li>);
                 break;
             case str.includes("Google Images supports images in the following formats: BMP, GIF, JPEG, PNG, WebP, and SVG"):
                 listArray.push(<li><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</li>);
@@ -32,8 +32,8 @@ export default function styleImageString(imageData : string) {
             case str.includes("Image can be further compressed"):
                 listArray.push(<li><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</li>);
                 break;
-            case str.includes("Src link of the image is not secured with https protocol"):
-                listArray.push(<li><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</li>);
+            case str.includes("Src link of the image is not secured with http protocol"):
+                listArray.push(<li><FontAwesomeIcon className = 'icon-high-warning'icon={faExclamationTriangle}/>{str}</li>);
                 break;
             case str.includes("Please make the loading attribute of this image as lazy for better loading time of the page"):
                 listArray.push(<li><FontAwesomeIcon className = 'icon-low-warning'icon={faExclamationCircle}/>{str}</li>);

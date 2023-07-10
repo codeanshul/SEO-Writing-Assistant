@@ -29,7 +29,8 @@ const Accordion: FC<Props> = ({ data }) => {
     else if (suggestionType.includes('Text')) styledStrings = styleTextString(data.content);
     const rotation = isOpen ? '0deg' : '90deg';
     return (
-
+        <div>
+         
         <div className="accordion">
             <div className="accordion-header" onClick={toggleAccordion}>
 
@@ -43,8 +44,9 @@ const Accordion: FC<Props> = ({ data }) => {
 
                 </section>
             </div>
-            {
-                isOpen &&
+            
+                { 
+                   isOpen &&
                 <div className="accordion-content">
                     {
                         styledStrings.map((currentString) => {
@@ -53,7 +55,10 @@ const Accordion: FC<Props> = ({ data }) => {
                         })
                     }
                 </div>
-            }
+                }
+                
+            
+        </div>
         </div>
     );
 };

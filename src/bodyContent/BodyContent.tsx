@@ -16,14 +16,14 @@ const BodyContent = () => {
     };
     const handleButtonClick = () => {
 
-        fetch('demo1.html')
-            .then((res) => res.text())
-            .then((res) => {
-                setText(res);
-                processHTML(res);
-            })
-            .catch((err) => console.log(err))
-        // if(text)processHTML(text);
+        // fetch('demo1.html')
+        //     .then((res) => res.text())
+        //     .then((res) => {
+        //         setText(res);
+        //         processHTML(res);
+        //     })
+        //     .catch((err) => console.log(err))
+        if(text)processHTML(text);
         function processHTML(contents : string) {
             // Performing operations on the HTML contents
             const arr = contents.split("</html>");

@@ -8,6 +8,9 @@ export default function styleHeaderString(headerData : string) {
     let listHeading : string = '';
     parts.map((str, index) => {
         switch(true){
+            case str.includes('No keywords given'):
+                outputArray.push(<p className='big-header-warning'><FontAwesomeIcon className = 'icon-high-warning'icon={faExclamationTriangle}/>{str}</p>);
+                break;
             case str.includes('No header tags'):
                 outputArray = insertLists(listArray,outputArray,listHeading);
                 if(listArray.length)listArray = [];

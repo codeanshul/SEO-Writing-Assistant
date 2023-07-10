@@ -9,6 +9,10 @@ export default function checkHeaders(htmlInput: HTMLElement, keyArray: string[])
     // console.log(keyArray);
     if (!htmlInput || keyArray === null) return objReturn;
     if (htmlInput && htmlInput.innerHTML.trim() === '') return objReturn;
+    else if (keyArray.length === 1 && keyArray[0] === '') {
+        objReturn.content = 'No keywords given';
+        return objReturn;
+    }
     let outputString = '';
     let headerTags = Array.from(htmlInput.querySelectorAll('h1, h2, h3, h4, h5, h6'));
     // console.log(headerTags);

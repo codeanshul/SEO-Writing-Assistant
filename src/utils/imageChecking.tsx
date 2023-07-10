@@ -1,8 +1,9 @@
 import imageCompression from "browser-image-compression";
 export default async function checkOptimizedImagesWithAlt(htmlInput: HTMLElement) {
+
     let objReturn = {
         title: 'Images',
-        content: "Loading Page....",
+        content: "",
     }
     if(htmlInput && htmlInput.innerHTML.trim() === '')return objReturn;
     let outputString : string = '';
@@ -72,6 +73,7 @@ async function checkImage(img: Element, src: string, altText: string, outputStri
     // enable loading attribute as lazy 
     if (!isLazyLoadEnable(img)) {
         outputString = giveSuggestion(`Please make the loading attribute of this image as lazy for better loading time of the page.%`, outputString);// yellow
+        anyError = true;
     }
     if (!anyError) {
         outputString = giveSuggestion(`Image has all required attributes for a good SEO recommended page.%`, outputString);// green

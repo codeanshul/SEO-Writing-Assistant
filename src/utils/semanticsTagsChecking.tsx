@@ -36,6 +36,7 @@ function checkEmptyTags(htmlInput : HTMLElement, outputString : string,isEmpty :
         const tagName = tag.nodeName;
         if (tagName === 'IMG') {
             if (!tag.getAttribute('src')) {
+                
                 if (!emptyTags.has(tagName)) {
                     emptyTags.set(tagName, 1);
                 }
@@ -58,7 +59,7 @@ function checkEmptyTags(htmlInput : HTMLElement, outputString : string,isEmpty :
                 isEmpty.push(tag);
             }
         }
-        else if (tag.childNodes.length === 0 && textContainTags.includes(tagName)) {
+        else if ((tag.childNodes.length === 0 || (tag.childNodes.length === 1 && tag.children.length === 0) && tag.innerHTML.trim() === '')&& (textContainTags.includes(tagName))) {
             // console.log(tagName);
             if (!emptyTags.has(tagName)) {
                 emptyTags.set(tagName, 1);
@@ -143,8 +144,11 @@ function checkArticleTag(htmlInput : HTMLElement, outputString : string, isEmpty
         let RecPartag : Element = articleTag;
         let isParArticlePresent = false;
         while (RecPartag.nodeName != "BODY") {
-            RecPartag = (RecPartag?.parentNode as Element) ||  null;
-            if (RecPartag.nodeName == "ARTICLE") isParArticlePresent = true;
+            RecPartag = (RecPartag?.parentElement as Element) ||  null;
+            if (RecPartag.nodeName === "ARTICLE") 
+            {
+                isParArticlePresent = true;
+            }
         }
         if (isParArticlePresent) {
             outputString = giveSuggestion(`Article tag should not be nested inside another article tag , as they individually is a standalone piece of content. %`, outputString);// yellow li
@@ -168,7 +172,8 @@ function checkSectionTag(htmlInput : HTMLElement, outputString : string, isEmpty
         const truncatedText = getTruncateText(sectionText, 25);
         if(truncatedText == '...')outputString = giveSuggestion(`Section check for ... (No text inside this tag).`,outputString);
         else outputString = giveSuggestion(`Section check for  ${truncatedText}%`, outputString);
-        if (!truncatedText || truncatedText === ' ') {
+
+        if (isWrapper(sectionTag)) {
             outputString = giveSuggestion(`This section is used as a wrapper , can use a div instead%`, outputString);
         }
         let childTags = sectionTag.children;
@@ -238,7 +243,7 @@ function countPercentageNonSemantictags(htmlInput : HTMLElement, outputString : 
         }
     }
     const percentage = (countNonSemantic / countAlltags) * 100;
-    if (percentage > 50) outputString = giveSuggestion(`Percentage of non semantic tags in the content is ${percentage.toFixed(0)},a good practice is to maintain maximum 50 percentage of nonsemantic tags.%`, outputString);
+    outputString = giveSuggestion(`Percentage of non semantic tags in the content is ${percentage.toFixed(0)},if possible please try to reduce it%`, outputString);
     // else if (percentage <= 50) outputString = giveSuggestion(`Its good that you have less percentage of non semantic tags in the content i.e ${percentage.toFixed(2)}.%`, outputString);
     // h6 yellow
     return { string: outputString};
@@ -256,4 +261,16 @@ function getTruncateText(text : string, maxLength : number) {
     }
     const truncatedText = text.slice(0, maxLength - 3) + '...';
     return truncatedText;
+}
+function isWrapper(sectionTag : Element){
+
+    let wrap = true;
+    for(let childTag of sectionTag.children){
+
+        let tagName = childTag.nodeName;
+        if(tagName != 'DIV' && tagName != 'SPAN' && tagName != 'P'){
+            wrap = false;
+        }
+    }
+    return wrap;
 }

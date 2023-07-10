@@ -49,13 +49,14 @@ async function externalLinksCheck(externalLinks: HTMLAnchorElement[], outputStri
         return { string: outputString};
     }
     for (let link of externalLinks) {
-
         let securedHref = link.href;
-        if (!securedHref.startsWith('http')) {
+        let isSecure = true;
+        if (securedHref.startsWith('http://localhost:')) {
             let linkHref = link.href;
             let newURL = new URL(linkHref);
             let pathName = newURL.pathname;
             securedHref = `https://${pathName}`;
+            isSecure = false;
         }
         outputString = giveSuggestion(`Check for the external link ${securedHref}randommm${link.text}%`, outputString);// tranparent h4
         let response = await isLinkCrawlable(securedHref);
@@ -69,7 +70,7 @@ async function externalLinksCheck(externalLinks: HTMLAnchorElement[], outputStri
         if (link.rel !== 'nofollow') {
             outputString = giveSuggestion(`Add a rel attribute as nofollow in the link , as search engines shouldn’t follow these links authority to the link target.%`, outputString);// yellow li
         }
-        if (!isSecure(link.href)) {
+        if (!isSecure) {
             outputString = giveSuggestion('Href attribute of the link is not secured with http protocol.%', outputString);// yellow
         }
     }
@@ -108,11 +109,10 @@ async function isLinkCrawlable(url: string) {
     }
     return true;
 }
-function isSecure(src: string) {
-    if (src.startsWith('/')) return true;
-    const url = new URL(src);
-    return url.protocol.startsWith('http');
-}
+// function isSecure(src: string) {
+//     if (src.startsWith('/')) return true;
+//     return src.startsWith('http');
+// }
 function giveSuggestion(text: string, outputString: string) {
     outputString = `${outputString}${text}`;
     return outputString;
