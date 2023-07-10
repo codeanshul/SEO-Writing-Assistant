@@ -51,7 +51,7 @@ async function externalLinksCheck(externalLinks: HTMLAnchorElement[], outputStri
     for (let link of externalLinks) {
         let securedHref = link.href;
         let isSecure = true;
-        if (securedHref.startsWith('http://localhost:')) {
+        if (securedHref.startsWith('https://seo-checker-tool.netlify.app/')) {
             let linkHref = link.href;
             let newURL = new URL(linkHref);
             let pathName = newURL.pathname;
