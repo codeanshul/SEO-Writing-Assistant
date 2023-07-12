@@ -1,16 +1,34 @@
 import imageCompression from "browser-image-compression";
+import { ImageDisplay } from "src/imageDisplay";
+import React from "react";
+import {ReactNode} from 'react';
+interface outputObject{
+    str : ReactNode;
+    warning : string;
+    iconWarning : string;
+    type : string;
+}
+interface ObjReturn{
+    title : string;
+    content : outputObject[];
+}
 export default async function checkOptimizedImagesWithAlt(htmlInput: HTMLElement) {
-
-    let objReturn = {
+    
+    let objReturn : ObjReturn = {
         title: 'Images',
-        content: "",
-    }
+        content: [],
+    };
     if(htmlInput && htmlInput.innerHTML.trim() === '')return objReturn;
-    let outputString : string = '';
+    let outputArray : outputObject[] = [];
     const images = htmlInput.querySelectorAll('img');
     if (images.length == 0) {
-        outputString = giveSuggestion(`No images in the article , Please add some relevant image so that results can become much more useful%`, outputString);// yellow
-        objReturn.content = outputString;
+        outputArray.push({
+            str : <>No images in the article , Please add some relevant image so that results can become much more useful</>,
+            warning : 'big-header-warning',
+            iconWarning : 'icon-high-warning',
+            type : 'p',
+        });
+        objReturn.content = outputArray;
         return objReturn;
     }
     let itemProcessed : number = 0;
@@ -21,65 +39,109 @@ export default async function checkOptimizedImagesWithAlt(htmlInput: HTMLElement
         const isImageValid = await checkImageSrc(src);
         itemProcessed++;
         if (isImageValid) {
-            const checkImageObj = await checkImage(img, src, altText, outputString);
-            outputString = checkImageObj.string;
+            outputArray = await checkImage(img, src, altText, outputArray);
         }
         else {
             console.log(`Not able to process this image ${src}`);
-            outputString = giveSuggestion(`Not able to process this image ${src}%`, outputString);
+            outputArray.push({
+                str : <>Not able to process this image {src}</>,
+                warning : 'big-header-warning',
+                iconWarning : 'icon-high-warning',
+                type : 'p',
+            });
         }
         if (itemProcessed == images.length) {
-            objReturn.content = outputString;
+            objReturn.content = outputArray;
             return objReturn;
         }
     }
     return objReturn;
 }
-async function checkImage(img: Element, src: string, altText: string, outputString: string) {
+async function checkImage(img: Element, src: string, altText: string, outputArray : outputObject[]) {
 
     let imageTitle: string = altText;
     if (hasOnlyWhitespaceContentOrNULL(altText)) imageTitle = 'IMG';
-    outputString = giveSuggestion(`Image check for the image ${src}randommm${imageTitle}%`, outputString);// transparent
+    outputArray.push({
+        str : <>Image check for the image <ImageDisplay src = {src} altText={imageTitle} /></>,
+        warning : 'big-header-warning',
+        iconWarning : '',
+        type : 'ul',
+    });
     const format = getImageFormatFromURL(src);
     const possibleExtension = ['bmp', 'gif', 'jpeg', 'png', 'webp', 'svg'];
     let anyError = false;
     const data = await checkImageCompression(src);
     const dataImageCompress = data && data.isCompressed;
     // image compression
+    if (hasOnlyWhitespaceContentOrNULL(altText)) {
+        outputArray.push({
+            str : <span> <b>Add alt attribute </b>for the image as it helps crawler to better understand what the image is about.</span>,
+            warning : '',
+            iconWarning : 'icon-high-warning',
+            type : 'li',
+        });
+        anyError = true;
+    }
+    if (!isLazyLoadEnable(img)) {
+        outputArray.push({
+            str : <span>Please make the <b>loading attribute</b> of this image as lazy for better loading time of the page.</span>,
+            warning : '',
+            iconWarning : 'icon-high-warning',
+            type : 'li',
+        });
+        anyError = true;
+    }
     if (dataImageCompress) {
         let totalCompress = data.originalSize - data.compressSize;
-        outputString = giveSuggestion(`Image can be further compressed , Potential savings upto : ${totalCompress} KB.%`, outputString);// yellow
+        outputArray.push({
+            str : <span>Image <b>can be further compressed </b>, Potential savings upto : {totalCompress} KB.</span>,
+            warning : '',
+            iconWarning : 'icon-low-warning',
+            type : 'li',
+        });
         anyError = true;
     }
     // format check
     if (!possibleExtension.includes(format)) {
-        outputString = giveSuggestion(`Google Images supports images in the following formats: BMP, GIF, JPEG, PNG, WebP, and SVG but your format is ${format}.%`, outputString);// yellow
+        outputArray.push({
+            str : <span>Google Images supports images in the following formats: BMP, GIF, JPEG, PNG, WebP, and SVG but your format is <i>{format}</i>.</span>,
+            warning : '',
+            iconWarning : 'icon-low-warning',
+            type : 'li',
+        });
         anyError = true;
     }
     if ((format == 'png' || format == 'jpeg')) {
-        outputString = giveSuggestion(`Please use image formats like WebP and AVIF as they often provide better compression than your format ${format}, which means faster downloads and less data consumption.%`, outputString);
+        outputArray.push({
+            str : <span>Please <b>use image formats like WebP and AVIF </b>as they often provide better compression than your format <i>{format}</i> , which means faster downloads and less data consumption.</span>,
+            warning : '',
+            iconWarning : 'icon-low-warning',
+            type : 'li',
+        });
         anyError = true;
     }
     // alt text check
-    if (hasOnlyWhitespaceContentOrNULL(altText)) {
-        outputString = giveSuggestion(`Add alt attribute for the image as it helps crawler to better understand what the image is about.%`, outputString);// yellow
-        anyError = true;
-    }
     // src link secured with http protocol
     if (!isSecure(src)) {
-        outputString = giveSuggestion('Src link of the image is not secured with http protocol.%', outputString);// yellow
+        outputArray.push({
+            str : <>Src link of the image is not secured with https protocol.</>,
+            warning : '',
+            iconWarning : 'icon-low-warning',
+            type : 'li',
+        });
         anyError = true;
     }
     // enable loading attribute as lazy 
-    if (!isLazyLoadEnable(img)) {
-        outputString = giveSuggestion(`Please make the loading attribute of this image as lazy for better loading time of the page.%`, outputString);// yellow
-        anyError = true;
-    }
     if (!anyError) {
-        outputString = giveSuggestion(`Image has all required attributes for a good SEO recommended page.%`, outputString);// green
+        outputArray.push({
+            str : <>Image has all required attributes for a good SEO recommended page.</>,
+            warning : '',
+            iconWarning : 'icon-no-warning',
+            type : 'li',
+        });
     }
     // console.log(score);
-    return { string: outputString};
+    return outputArray;
 }
 function checkImageSrc(imageUrl: string) {
     return new Promise((resolve) => {
@@ -152,7 +214,7 @@ function getImageFormatFromURL(url: string) {
     const extension = url.split('.').pop()?.toLowerCase() ?? '';
     const formatMatch = url.match(/^data:image\/(\w+);base64,/);
     if (!formatMatch){
-        if(!possibleExtension.includes(extension))return 'Unknown Format';
+        if(!possibleExtension.includes(extension))return 'Unknown';
         return extension;
     }
     return formatMatch[1];
@@ -165,7 +227,4 @@ function hasOnlyWhitespaceContentOrNULL(element: string) {
     const content = element.trim();// check by using length on trim
     return whitespaceRegex.test(content);
 }
-function giveSuggestion(text: string, outputString: string) {
-    outputString = `${outputString}${text}`;
-    return outputString;
-}
+

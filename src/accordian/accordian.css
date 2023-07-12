@@ -60,7 +60,8 @@ ul {
 
 li {
   display: flex;
-  margin-left: -13px;
+  margin-left: 30px;
+  padding-bottom: 5px;
 }
 
 .big-header-warning {
@@ -68,6 +69,7 @@ li {
   margin-bottom: 8px;
   font-size: large;
   font-weight: 600;
+  padding-top: 5px;
 }
 
 .icon-high-warning {

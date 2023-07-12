@@ -1,20 +1,40 @@
 import getInnerText from "./getInnerText.tsx";
 // Readability check scores : If very low then report
-// Calculate %of keywords in the text content if in between 5 to 20 then okay else report
-// check for long tail keywords . If keywords array has no long tail keywords then report or can check for 10% of keyarray
+// Calculate of keywords in the text content if in between 5 to 20 then okay else report
+// check for long tail keywords . If keywords array has no long tail keywords then report or can check for 10 of keyarray
+import React from "react";
+import { ReactNode } from "react";
+interface outputObject{
+    str : ReactNode;
+    warning : string;
+    iconWarning : string;
+    type : string;
+}
+interface ObjReturn{
+    title : string;
+    content : outputObject[];
+}
 export default function checkBodyTextContent(htmlInput : HTMLElement, keyArray : string[], readText : string) {
     // const textAnalysis = document.getElementById(`Text`);
-    let objReturn = {
+    let objReturn : ObjReturn = {
         title: 'Text Content',
-        content: 'No content given',
+        content: [],
     }
+    let outputArray : outputObject[] = [];
     if (!htmlInput) return objReturn;
     if(htmlInput && htmlInput.innerHTML.trim() === '')return objReturn;
     else if (keyArray.length === 1 && keyArray[0] === '') {
-        objReturn.content = 'No keywords given';
+        outputArray.push({
+            str : <>No keywords given</>,
+            warning : 'big-header-warning',
+            iconWarning : 'icon-high-warning',
+            type : 'p',
+        });
+        objReturn.content = outputArray;
         return objReturn;
     }
-    let outputString = '';
+    const allTags = htmlInput.querySelectorAll('body *')
+    console.log(allTags.length);
     const bodytextContent = getInnerText(readText).replace(/\s+/g, ' ').trim().toLowerCase();
     let totalWordsBody = bodytextContent.split(' ').length;
     let cntKeyword = 0;
@@ -29,19 +49,39 @@ export default function checkBodyTextContent(htmlInput : HTMLElement, keyArray :
         if (cntWords > 1) cntLongtailKeyword++;
     }
     if (cntLongtailKeyword < 0.1*keyArray.length) {
-        outputString = giveSuggestion(`Try to use some long-tail keywords, which are more specific and less competitive than short-tail keywords...%`, outputString);// h4 yellow
+        outputArray.push({
+            str : <>Try to use some long-tail keywords, which are more specific and less competitive than short-tail keywords...</>,
+            warning : 'big-header-warning',
+            iconWarning : 'icon-low-warning',
+            type : 'p',
+        });
     }
     if (totalWordsBody * 0.02 > cntKeyword) {
-        outputString = giveSuggestion(`Try to optimize your content for specific keywords as you increase the chances of appearing in the search engine results pages (SERPs) for those keywords..%`, outputString);// h4 yellow
+        outputArray.push({
+            str : <>Try to optimize your content for specific keywords as you increase the chances of appearing in the search engine results pages (SERPs) for those keywords..</>,
+            warning : 'big-header-warning',
+            iconWarning : 'icon-low-warning',
+            type : 'p',
+        });
     }
     if (totalWordsBody * 0.20 < cntKeyword) {
-        outputString = giveSuggestion(`Please try to reduce some keywords on your page as search engines can penalize pages for seeing it as manipulation for ranking...%`, outputString);// h4 yellow
+        outputArray.push({
+            str : <>Please try to reduce some keywords on your page as search engines can penalize pages for seeing it as manipulation for ranking...</>,
+            warning : 'big-header-warning',
+            iconWarning : 'icon-low-warning',
+            type : 'p',
+        });
     }
     const readabilityObject = calculateFleschKincaid(bodytextContent)
     const readabilityScore = readabilityObject.scr;
     const readabilityString = readabilityObject.string;
-    outputString = giveSuggestion(`${readabilityString.slice(0,-1)},according to Flesch-Kincaid Readability test and its score is ${readabilityScore.toFixed(2)}.%`, outputString);
-    objReturn.content = outputString;
+    outputArray.push({
+        str : <>{readabilityString.slice(0,-1)},according to Flesch-Kincaid Readability test and its score is {readabilityScore.toFixed(2)}.</>,
+        warning : 'big-header-warning',
+        iconWarning : 'icon-low-warning',
+        type : 'p',
+    });
+    objReturn.content = outputArray;
     return objReturn;
 }
 function calculateFleschKincaid(text : string) {
@@ -96,11 +136,6 @@ function countSyllables(word : string) {
     word = word.replace(/^y/, "");
     if (word.match(/[aeiouy]{1,2}/g) === null) return 0;
     else return word.match(/[aeiouy]{1,2}/g)?.length;
-}
-function giveSuggestion(text : string, outputString : string) {
-
-    outputString = `${outputString}${text}`;
-    return outputString;
 }
 // export { checkBodyTextContent };
 

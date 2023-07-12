@@ -1,4 +1,4 @@
-import React, { useEffect, useState , FC }from 'react'
+import React, { useEffect, useState , FC, ReactNode }from 'react'
 import Accordion from '../accordian/Accordian.tsx'
 import './output.css'
 import checkHeaders from '../utils/headerChecking.tsx'
@@ -17,8 +17,8 @@ const Output : FC<Props> = ({ htmlInput, keyArray, readText }) => {
     const headerData = checkHeaders(htmlInput, keyArray);// 15
     const semanticData = checkSemanticTags(htmlInput);// 25
     const textcheckData = checkBodyTextContent(htmlInput, keyArray, readText);// 15
-    const [imageData, setImageData] = useState({ title: 'Image', content: 'No Content given'});// 30
-    const [linkData, setLinkData] = useState({title : 'Internal/External Links' , content : 'No content given h2 ' });// 15
+    const [imageData, setImageData] = useState({ title: 'Image', content: [{str: <>No Content given</> as ReactNode,warning : '' , iconWarning : '',type : ''}]});// 30
+    const [linkData, setLinkData] = useState({title : 'Internal/External Links' , content : [{str: <>No Content given</> as ReactNode,warning : '' , iconWarning : '',type : ''}]});// 15
     useEffect(() => {
 
         const fetchData = async () => {
