@@ -24,7 +24,7 @@ export default async function checkLinks(htmlInput: HTMLElement, keyArray: strin
         outputArray.push({
             str : <>No Links in the content , can add some relevant links for better indexing and visibilty.</>,
             warning : 'big-header-warning',
-            iconWarning : 'icon-low-warning',
+            iconWarning : 'icon-high-warning',
             type : 'p',
         });
         objReturn.content = outputArray;

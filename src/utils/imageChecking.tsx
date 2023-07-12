@@ -94,7 +94,7 @@ async function checkImage(img: Element, src: string, altText: string, outputArra
     if (dataImageCompress) {
         let totalCompress = data.originalSize - data.compressSize;
         outputArray.push({
-            str : <span>Image <b>can be further compressed </b>, Potential savings upto : {totalCompress} KB.</span>,
+            str : <span>Image <b>can be further compressed </b>, Potential savings upto : <b>{totalCompress} KB.</b></span>,
             warning : '',
             iconWarning : 'icon-low-warning',
             type : 'li',
@@ -210,6 +210,7 @@ function isSecure(src: string) {
     return url.protocol.startsWith('http');
 }
 function getImageFormatFromURL(url: string) {
+
     const possibleExtension = ['bmp', 'gif', 'jpeg', 'png', 'webp', 'svg','avif','jpg'];
     const extension = url.split('.').pop()?.toLowerCase() ?? '';
     const formatMatch = url.match(/^data:image\/(\w+);base64,/);
